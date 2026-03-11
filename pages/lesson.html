@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>단원 학습 – 생명과학 I</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <style>
+    /* ---- lesson.html 추가 스타일 ---- */
+
+    /* 탭 콘텐츠 영역 기본 숨김 */
+    .tab-content { display: none; }
+
+    /* 개념 다이어그램 영역 */
+    .diagram-placeholder {
+      background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+      border: 2px dashed var(--primary-300);
+      border-radius: var(--border-radius);
+      min-height: 260px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: var(--primary-400);
+      margin: 20px 0;
+    }
+
+    .diagram-placeholder .diagram-icon { font-size: 48px; opacity: 0.6; }
+    .diagram-placeholder p { font-size: 14px; font-weight: 600; }
+    .diagram-placeholder span { font-size: 12px; opacity: 0.7; }
+
+    /* 탐구 활동 아이콘 */
+    .activity-type-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-right: 8px;
+    }
+
+    .badge-simulation {
+      background: rgba(34,197,94,0.12);
+      color: var(--green-700);
+      border: 1px solid var(--green-300);
+    }
+
+    .badge-video {
+      background: rgba(26,141,203,0.10);
+      color: var(--primary-700);
+      border: 1px solid var(--primary-300);
+    }
+
+    /* 실험 단계 카드 */
+    .experiment-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin: 20px 0;
+    }
+
+    .exp-step {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .exp-step-num {
+      width: 32px;
+      height: 32px;
+      background: var(--primary-500);
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .exp-step-content {
+      flex: 1;
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--border-radius-sm);
+      padding: 14px 18px;
+    }
+
+    .exp-step-content h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--gray-800);
+      margin-bottom: 4px;
+    }
+
+    .exp-step-content p {
+      font-size: 13.5px;
+      color: var(--gray-600);
+      line-height: 1.7;
+    }
+
+    /* 이전 / 다음 내비게이션 */
+    .lesson-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 48px;
+      background: #fff;
+      border-top: 1px solid var(--gray-200);
+    }
+
+    .lesson-nav-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 20px;
+      border-radius: var(--border-radius-sm);
+      border: 1.5px solid var(--gray-200);
+      background: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gray-600);
+      cursor: pointer;
+      transition: var(--transition);
+      text-decoration: none;
+    }
+
+    .lesson-nav-btn:hover {
+      border-color: var(--primary-300);
+      color: var(--primary-600);
+      background: var(--primary-50);
+    }
+
+    .lesson-nav-btn .nav-sub {
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--gray-400);
+      display: block;
+      line-height: 1;
+    }
+
+    .lesson-nav-btn .nav-main {
+      display: block;
+      line-height: 1.4;
+    }
+
+    /* 완료 버튼 */
+    .complete-btn-wrap {
+      text-align: center;
+      padding: 12px 0;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ====== 헤더 ====== -->
+<header class="site-header">
+  <div class="header-inner">
+    <a href="../index.html" class="header-logo">
+      <div class="logo-icon">🔬</div>
+      <div class="logo-text">
+        <span class="logo-title">생명과학 I</span>
+        <span class="logo-sub">22개정 교육과정 · 일반선택</span>
+      </div>
+    </a>
+    <nav class="header-nav">
+      <a href="../index.html">🏠 홈</a>
+      <a href="units.html">📚 단원</a>
+      <a href="#" class="active">📖 학습</a>
+      <span class="header-badge">2022 개정</span>
+    </nav>
+    <button id="menu-toggle" class="btn btn-ghost" style="display:none;">☰</button>
+  </div>
+</header>
+
+<!-- ====== 레이아웃 ====== -->
+<div class="content-area">
+
+  <!-- 사이드바 -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h3>단원 목차</h3>
+    </div>
+    <nav class="unit-nav" id="sidebar-nav">
+      <!-- JS로 렌더링 -->
+    </nav>
+    <div class="sidebar-footer">
+      <div class="progress-summary">
+        <div class="progress-label">
+          <span>학습 진도</span>
+          <span class="progress-percent">0%</span>
+        </div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar-fill" style="width:0%"></div>
+        </div>
+      </div>
+      <p style="font-size:11px; color:var(--gray-400); text-align:center;">
+        완료: <span class="progress-completed">0 / 0</span>
+      </p>
+    </div>
+  </aside>
+
+  <!-- 메인 콘텐츠 -->
+  <main class="main-content">
+
+    <!-- 빵부스러기 -->
+    <nav class="breadcrumb">
+      <a href="../index.html">🏠 홈</a>
+      <span class="sep">›</span>
+      <a href="units.html">단원 목록</a>
+      <span class="sep">›</span>
+      <span id="bc-unit">단원 I</span>
+      <span class="sep">›</span>
+      <span id="bc-lesson">생명 현상의 특성</span>
+    </nav>
+
+    <!-- 페이지 헤더 -->
+    <div class="lesson-page-header">
+      <span class="unit-tag" id="page-unit-tag">단원 I · 생명 과학의 이해</span>
+      <h1 id="page-lesson-title">생명 현상의 특성</h1>
+      <p id="page-lesson-desc" class="text-gray">생물이 공통적으로 지니는 생명 현상의 특성을 이해한다.</p>
+    </div>
+
+    <!-- 탭 버튼 -->
+    <div class="lesson-tabs">
+      <button class="tab-btn" data-tab="concept">
+        <span class="tab-icon">📖</span> 개념 학습
+      </button>
+      <button class="tab-btn" data-tab="activity">
+        <span class="tab-icon">🧪</span> 탐구 활동
+        <span class="tab-badge">영상·실험</span>
+      </button>
+      <button class="tab-btn" data-tab="quiz">
+        <span class="tab-icon">📝</span> 형성평가
+        <span class="tab-badge" id="quiz-count-badge">5문항</span>
+      </button>
+    </div>
+
+    <!-- ============================================================
+         탭 ① 개념 학습
+         ============================================================ -->
+    <div id="tab-concept" class="tab-content concept-section">
+
+      <!-- 학습 목표 -->
+      <div class="learning-goals">
+        <div class="learning-goals-title">🎯 학습 목표</div>
+        <ul>
+          <li>생물의 공통적인 특성 8가지를 설명할 수 있다.</li>
+          <li>생명 현상의 각 특성을 구체적인 예시와 연결할 수 있다.</li>
+          <li>생물과 무생물의 차이를 생명 현상의 특성을 기준으로 구별할 수 있다.</li>
+        </ul>
+      </div>
+
+      <!-- 개념 카드 1 -->
+      <div class="section-title">
+        <span class="title-accent"></span>
+        1. 생명 현상의 특성
+      </div>
+      <p class="section-subtitle">생물은 무생물과 구별되는 다음과 같은 공통적인 특성을 지닌다.</p>
+
+      <!-- 핵심 개념 박스 -->
+      <div class="key-concept-box">
+        <p style="font-size:14.5px; line-height:1.9; color:var(--gray-700);">
+          생물의 공통된 특성: <strong style="color:var(--primary-700);">세포로 구성, 물질대사, 자극에 대한 반응, 항상성, 생장과 발생, 생식과 유전, 적응과 진화</strong>
+        </p>
+      </div>
+
+      <!-- 개념 카드들 -->
+      <div class="concept-card">
+        <div class="concept-card-header">
+          <div class="concept-card-icon">🔵</div>
+          <div class="concept-card-title">① 세포로 구성</div>
+        </div>
+        <div class="concept-card-body">
+          모든 생물은 <strong>세포(cell)</strong>로 구성되어 있다. 세포는 생명 활동의 기본 단위이며,
+          단세포 생물(아메바, 대장균 등)은 1개의 세포로, 다세포 생물은 수많은 세포로 이루어져 있다.
+          <div class="diagram-placeholder" style="min-height:160px; margin-top:16px;">
+            <span class="diagram-icon">🔬</span>
+            <p>세포 구조 다이어그램</p>
+            <span>[ 삽화 / 이미지 삽입 영역 ]</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="concept-card">
+        <div class="concept-card-header">
+          <div class="concept-card-icon">⚗️</div>
+          <div class="concept-card-title">② 물질대사</div>
+        </div>
+        <div class="concept-card-body">
+          생물은 생명 활동에 필요한 에너지를 얻기 위해 <strong>물질대사(metabolism)</strong>를 한다.
+          물질대사는 <strong>동화 작용</strong>(소분자 → 고분자, 에너지 저장)과
+          <strong>이화 작용</strong>(고분자 → 소분자, 에너지 방출)으로 나뉜다.
+          <div class="tip-box" style="margin-top:14px;">
+            <span class="tip-icon">💡</span>
+            <p><strong>예시:</strong> 광합성(동화 작용) – CO₂와 H₂O로 포도당을 합성 /
+               세포 호흡(이화 작용) – 포도당을 분해하여 ATP 생성</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="concept-card">
+        <div class="concept-card-header">
+          <div class="concept-card-icon">📡</div>
+          <div class="concept-card-title">③ 자극에 대한 반응</div>
+        </div>
+        <div class="concept-card-body">
+          생물은 외부 환경의 변화(자극)를 인식하고 그에 반응한다.
+          빛, 온도, 화학 물질 등의 자극에 대해 적절한 반응을 보이는 것은
+          생물만이 가지는 특성이다.
+          <div class="tip-box" style="margin-top:14px;">
+            <span class="tip-icon">💡</span>
+            <p><strong>예시:</strong> 식물의 굴광성 – 빛을 향해 굴어 자라는 현상 /
+               동물의 눈동자 조절 – 빛의 양에 따라 동공 크기 변화</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="concept-card">
+        <div class="concept-card-header">
+          <div class="concept-card-icon">⚖️</div>
+          <div class="concept-card-title">④ 항상성</div>
+        </div>
+        <div class="concept-card-body">
+          생물은 외부 환경이 변해도 체내 환경을 일정하게 유지하는
+          <strong>항상성(homeostasis)</strong>을 가진다.
+          체온, 혈당 농도, 삼투압 등이 일정하게 유지되는 것이 그 예이다.
+        </div>
+      </div>
+
+      <div class="concept-card">
+        <div class="concept-card-header">
+          <div class="concept-card-icon">🌱</div>
+          <div class="concept-card-title">⑤ 생장과 발생</div>
+        </div>
+        <div class="concept-card-body">
+          생물은 <strong>생장(growth)</strong>과 <strong>발생(development)</strong>을 통해
+          성체로 자란다. 세포 수의 증가와 크기 증가로 몸이 커지고,
+          수정란에서 분화를 통해 복잡한 구조를 갖추게 된다.
+        </div>
+      </div>
+
+      <div class="concept-card">
+        <div class="concept-card-header">
+          <div class="concept-card-icon">🧬</div>
+          <div class="concept-card-title">⑥ 생식과 유전</div>
+        </div>
+        <div class="concept-card-body">
+          생물은 <strong>생식(reproduction)</strong>을 통해 자손을 남기고,
+          부모의 유전 정보를 자손에게 전달하는 <strong>유전(heredity)</strong>이 일어난다.
+        </div>
+      </div>
+
+      <div class="concept-card">
+        <div class="concept-card-header">
+          <div class="concept-card-icon">🦋</div>
+          <div class="concept-card-title">⑦ 적응과 진화</div>
+        </div>
+        <div class="concept-card-body">
+          생물은 오랜 시간에 걸쳐 환경에 <strong>적응(adaptation)</strong>하고,
+          세대를 거듭하면서 유전적 변화가 축적되어 <strong>진화(evolution)</strong>가 일어난다.
+        </div>
+      </div>
+
+      <!-- 용어 정리 테이블 -->
+      <div style="margin-top:32px;">
+        <div class="section-title">
+          <span class="title-accent"></span>
+          핵심 용어 정리
+        </div>
+        <table class="term-table" style="margin-top:16px;">
+          <thead>
+            <tr>
+              <th>용어</th>
+              <th>정의</th>
+              <th>예시</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>물질대사</td>
+              <td>생물체 내에서 일어나는 모든 화학 반응</td>
+              <td>광합성, 세포 호흡</td>
+            </tr>
+            <tr>
+              <td>항상성</td>
+              <td>체내 환경을 일정하게 유지하는 성질</td>
+              <td>체온 조절, 혈당 조절</td>
+            </tr>
+            <tr>
+              <td>동화 작용</td>
+              <td>소분자를 고분자로 합성하는 반응 (에너지 흡수)</td>
+              <td>광합성, 단백질 합성</td>
+            </tr>
+            <tr>
+              <td>이화 작용</td>
+              <td>고분자를 소분자로 분해하는 반응 (에너지 방출)</td>
+              <td>세포 호흡, 소화</td>
+            </tr>
+            <tr>
+              <td>항상성</td>
+              <td>체내 환경을 일정하게 유지하는 성질</td>
+              <td>체온 조절, 혈당 조절</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 개념 학습 완료 버튼 -->
+      <div class="complete-btn-wrap" style="margin-top:32px;">
+        <button class="btn btn-primary" onclick="Tabs.show('activity')">
+          탐구 활동으로 이동 →
+        </button>
+      </div>
+
+    </div>
+    <!-- // tab-concept -->
+
+    <!-- ============================================================
+         탭 ② 탐구 활동 (영상 / 실험 시뮬레이션)
+         ============================================================ -->
+    <div id="tab-activity" class="tab-content simulation-section">
+
+      <!-- 활동 선택 배지 -->
+      <div style="margin-bottom:24px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+        <span class="activity-type-badge badge-video">📹 생명 현상 영상</span>
+        <span style="font-size:13px; color:var(--gray-500);">이번 소단원의 탐구 활동입니다.</span>
+      </div>
+
+      <!-- 영상 카드 1 -->
+      <div class="simulation-card">
+        <div class="simulation-header">
+          <h3>📹 생명 현상의 특성 – 관찰 영상</h3>
+          <p>아메바의 운동, 식물의 굴광성, 항온 동물의 체온 조절 과정을 관찰한다.</p>
+        </div>
+        <div class="simulation-body">
+          <!-- 영상 플레이스홀더 -->
+          <div class="video-placeholder">
+            <div class="play-btn">▶</div>
+            <p class="video-label">생명 현상 관찰 영상</p>
+            <span class="video-sub">[ 영상 파일 또는 YouTube 임베드 삽입 영역 ]</span>
+          </div>
+
+          <!-- 관찰 포인트 -->
+          <div style="margin-top:20px; background:var(--gray-50); border-radius:var(--border-radius); padding:20px; border:1px solid var(--gray-200);">
+            <div class="sim-interact-title">👁 관찰 포인트</div>
+            <ul style="display:flex; flex-direction:column; gap:10px; padding-left:4px;">
+              <li style="display:flex; gap:10px; font-size:14px; color:var(--gray-700);">
+                <span style="color:var(--primary-500); font-weight:700;">①</span>
+                영상에서 생명 현상의 특성이 나타나는 장면을 찾아보자.
+              </li>
+              <li style="display:flex; gap:10px; font-size:14px; color:var(--gray-700);">
+                <span style="color:var(--primary-500); font-weight:700;">②</span>
+                아메바의 운동에서 어떤 생명 현상의 특성이 나타나는가?
+              </li>
+              <li style="display:flex; gap:10px; font-size:14px; color:var(--gray-700);">
+                <span style="color:var(--primary-500); font-weight:700;">③</span>
+                식물이 빛을 향해 자라는 것은 어떤 특성과 관련이 있는가?
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- 영상 카드 2 (생명과학 탐구 과정) -->
+      <div class="simulation-card">
+        <div class="simulation-header">
+          <h3>🔬 생명 과학의 탐구 방법 – 과정 영상</h3>
+          <p>귀납적 탐구 방법과 연역적 탐구 방법의 과정을 비교한다.</p>
+        </div>
+        <div class="simulation-body">
+          <div class="video-placeholder">
+            <div class="play-btn">▶</div>
+            <p class="video-label">탐구 방법 비교 영상</p>
+            <span class="video-sub">[ 영상 파일 또는 YouTube 임베드 삽입 영역 ]</span>
+          </div>
+
+          <!-- 탐구 단계 카드 -->
+          <div style="margin-top:20px;">
+            <div class="sim-interact-title">🔁 연역적 탐구 방법 단계</div>
+            <div class="experiment-steps">
+              <div class="exp-step">
+                <div class="exp-step-num">1</div>
+                <div class="exp-step-content">
+                  <h4>문제 인식</h4>
+                  <p>관찰이나 경험을 통해 탐구할 문제를 인식하고 설정한다.</p>
+                </div>
+              </div>
+              <div class="exp-step">
+                <div class="exp-step-num">2</div>
+                <div class="exp-step-content">
+                  <h4>가설 설정</h4>
+                  <p>문제의 원인이나 결과에 대한 잠정적인 답(가설)을 설정한다.</p>
+                </div>
+              </div>
+              <div class="exp-step">
+                <div class="exp-step-num">3</div>
+                <div class="exp-step-content">
+                  <h4>탐구 설계 및 수행</h4>
+                  <p>가설을 검증하기 위한 실험을 설계하고 대조 실험을 수행한다.</p>
+                </div>
+              </div>
+              <div class="exp-step">
+                <div class="exp-step-num">4</div>
+                <div class="exp-step-content">
+                  <h4>결과 분석 및 결론 도출</h4>
+                  <p>실험 결과를 분석하고 가설의 채택 여부를 결정한다.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 탐구 활동 완료 버튼 -->
+      <div class="complete-btn-wrap" style="margin-top:8px;">
+        <button class="btn btn-primary" onclick="Tabs.show('quiz')">
+          형성평가 시작하기 →
+        </button>
+      </div>
+
+    </div>
+    <!-- // tab-activity -->
+
+    <!-- ============================================================
+         탭 ③ 형성평가
+         ============================================================ -->
+    <div id="tab-quiz" class="tab-content quiz-section">
+
+      <!-- 형성평가 헤더 -->
+      <div class="quiz-header">
+        <h2>📝 형성평가</h2>
+        <p>단원 I – 1. 생명 현상의 특성</p>
+        <div class="quiz-meta">
+          <span class="quiz-meta-item">🕐 제한 없음</span>
+          <span class="quiz-meta-item">📋 5문항</span>
+          <span class="quiz-meta-item">✅ 즉시 피드백</span>
+        </div>
+      </div>
+
+      <!-- 문제 1 -->
+      <div class="question-card" data-qid="q1" data-answer="c">
+        <div class="question-number">1</div>
+        <div class="question-text">
+          다음 중 생물의 특성 중 <strong>'물질대사'</strong>에 해당하는 예시로 가장 적절한 것은?
+        </div>
+        <ul class="choices-list">
+          <li class="choice-item" data-choice="a" data-choice-num="①">
+            <span class="choice-num">①</span>
+            식물이 빛을 향해 굽어 자란다.
+          </li>
+          <li class="choice-item" data-choice="b" data-choice-num="②">
+            <span class="choice-num">②</span>
+            인체는 외부 온도가 낮아져도 체온을 36.5°C로 유지한다.
+          </li>
+          <li class="choice-item" data-choice="c" data-choice-num="③">
+            <span class="choice-num">③</span>
+            세포 내에서 포도당이 분해되어 ATP와 CO₂, H₂O가 생성된다.
+          </li>
+          <li class="choice-item" data-choice="d" data-choice-num="④">
+            <span class="choice-num">④</span>
+            개구리는 성체가 되는 과정에서 올챙이 단계를 거친다.
+          </li>
+          <li class="choice-item" data-choice="e" data-choice-num="⑤">
+            <span class="choice-num">⑤</span>
+            부모의 형질이 자손에게 전달된다.
+          </li>
+        </ul>
+        <!-- 해설 피드백 -->
+        <div class="feedback-box">
+          <div class="feedback-header">
+            <span class="feedback-icon"></span>
+            <span class="feedback-title"></span>
+          </div>
+          <div class="feedback-body">
+            <strong>정답: ③</strong><br>
+            <strong>물질대사</strong>는 생물체 내에서 일어나는 화학 반응으로, 에너지를 방출하거나 저장하는 과정입니다.
+            ③번 '포도당 분해(세포 호흡)'는 <strong>이화 작용</strong>(에너지 방출)의 대표적인 예입니다.<br><br>
+            • ①은 <strong>자극에 대한 반응(굴광성)</strong><br>
+            • ②는 <strong>항상성</strong>(체온 유지)<br>
+            • ④는 <strong>생장과 발생</strong><br>
+            • ⑤는 <strong>생식과 유전</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- 문제 2 -->
+      <div class="question-card" data-qid="q2" data-answer="b">
+        <div class="question-number">2</div>
+        <div class="question-text">
+          다음 설명 중 생물의 특성 <strong>'항상성'</strong>에 대한 설명으로 옳은 것은?
+        </div>
+        <ul class="choices-list">
+          <li class="choice-item" data-choice="a" data-choice-num="①">
+            <span class="choice-num">①</span>
+            생물은 세포 분열을 통해 크기가 커지고 기능이 분화된다.
+          </li>
+          <li class="choice-item" data-choice="b" data-choice-num="②">
+            <span class="choice-num">②</span>
+            외부 환경이 변해도 체내 환경(체온, 혈당 등)을 일정하게 유지한다.
+          </li>
+          <li class="choice-item" data-choice="c" data-choice-num="③">
+            <span class="choice-num">③</span>
+            생물은 오랜 시간 동안 환경에 적응하며 유전적으로 변화한다.
+          </li>
+          <li class="choice-item" data-choice="d" data-choice-num="④">
+            <span class="choice-num">④</span>
+            생물체 내에서 일어나는 모든 화학 반응의 총칭이다.
+          </li>
+          <li class="choice-item" data-choice="e" data-choice-num="⑤">
+            <span class="choice-num">⑤</span>
+            부모의 특성이 자손에게 전해지는 현상이다.
+          </li>
+        </ul>
+        <div class="feedback-box">
+          <div class="feedback-header">
+            <span class="feedback-icon"></span>
+            <span class="feedback-title"></span>
+          </div>
+          <div class="feedback-body">
+            <strong>정답: ②</strong><br>
+            <strong>항상성</strong>은 생물이 외부 환경의 변화에도 체내 환경을 일정하게 유지하는 성질입니다.
+            혈당 조절, 체온 유지, 삼투압 조절 등이 대표적인 예입니다.<br><br>
+            • ①은 <strong>생장과 발생</strong> / ③은 <strong>적응과 진화</strong> / ④는 <strong>물질대사</strong> / ⑤는 <strong>유전</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- 문제 3 -->
+      <div class="question-card" data-qid="q3" data-answer="a">
+        <div class="question-number">3</div>
+        <div class="question-text">
+          다음 중 <strong>동화 작용</strong>의 예시로 가장 적절한 것은?
+        </div>
+        <ul class="choices-list">
+          <li class="choice-item" data-choice="a" data-choice-num="①">
+            <span class="choice-num">①</span>
+            식물이 빛에너지를 이용하여 CO₂와 H₂O에서 포도당을 합성한다.
+          </li>
+          <li class="choice-item" data-choice="b" data-choice-num="②">
+            <span class="choice-num">②</span>
+            세포가 포도당을 분해하여 ATP를 생성한다.
+          </li>
+          <li class="choice-item" data-choice="c" data-choice-num="③">
+            <span class="choice-num">③</span>
+            아밀레이스가 녹말을 엿당으로 분해한다.
+          </li>
+          <li class="choice-item" data-choice="d" data-choice-num="④">
+            <span class="choice-num">④</span>
+            소화 효소에 의해 단백질이 아미노산으로 분해된다.
+          </li>
+          <li class="choice-item" data-choice="e" data-choice-num="⑤">
+            <span class="choice-num">⑤</span>
+            지방이 글리세롤과 지방산으로 분해된다.
+          </li>
+        </ul>
+        <div class="feedback-box">
+          <div class="feedback-header">
+            <span class="feedback-icon"></span>
+            <span class="feedback-title"></span>
+          </div>
+          <div class="feedback-body">
+            <strong>정답: ①</strong><br>
+            <strong>동화 작용</strong>은 작은 분자를 큰 분자로 합성하는 반응으로 에너지를 흡수합니다.
+            <strong>광합성</strong>(CO₂ + H₂O → 포도당)이 대표적입니다.<br><br>
+            ②③④⑤는 모두 큰 분자를 작은 분자로 분해하는 <strong>이화 작용</strong>의 예입니다.
+          </div>
+        </div>
+      </div>
+
+      <!-- 문제 4 -->
+      <div class="question-card" data-qid="q4" data-answer="d">
+        <div class="question-number">4</div>
+        <div class="question-text">
+          연역적 탐구 방법의 단계를 순서대로 바르게 나열한 것은?
+        </div>
+        <ul class="choices-list">
+          <li class="choice-item" data-choice="a" data-choice-num="①">
+            <span class="choice-num">①</span>
+            가설 설정 → 문제 인식 → 탐구 설계 → 결과 분석 → 결론 도출
+          </li>
+          <li class="choice-item" data-choice="b" data-choice-num="②">
+            <span class="choice-num">②</span>
+            결과 분석 → 문제 인식 → 가설 설정 → 탐구 수행 → 결론 도출
+          </li>
+          <li class="choice-item" data-choice="c" data-choice-num="③">
+            <span class="choice-num">③</span>
+            탐구 설계 → 가설 설정 → 문제 인식 → 결과 분석 → 결론 도출
+          </li>
+          <li class="choice-item" data-choice="d" data-choice-num="④">
+            <span class="choice-num">④</span>
+            문제 인식 → 가설 설정 → 탐구 설계 및 수행 → 결과 분석 → 결론 도출
+          </li>
+          <li class="choice-item" data-choice="e" data-choice-num="⑤">
+            <span class="choice-num">⑤</span>
+            문제 인식 → 탐구 수행 → 가설 설정 → 결과 분석 → 결론 도출
+          </li>
+        </ul>
+        <div class="feedback-box">
+          <div class="feedback-header">
+            <span class="feedback-icon"></span>
+            <span class="feedback-title"></span>
+          </div>
+          <div class="feedback-body">
+            <strong>정답: ④</strong><br>
+            연역적 탐구 방법의 순서:<br>
+            <strong>문제 인식 → 가설 설정 → 탐구 설계 및 수행 → 결과 분석 → 결론 도출</strong><br><br>
+            핵심은 <strong>가설을 먼저 설정</strong>하고 실험으로 검증하는 방식임을 기억하세요.
+            귀납적 탐구 방법과 달리 가설 설정 단계가 포함되는 것이 특징입니다.
+          </div>
+        </div>
+      </div>
+
+      <!-- 문제 5 -->
+      <div class="question-card" data-qid="q5" data-answer="e">
+        <div class="question-number">5</div>
+        <div class="question-text">
+          다음 생물의 특성 중 <strong>바이러스</strong>가 <u>가지지 않는</u> 특성으로만 묶인 것은?
+        </div>
+        <ul class="choices-list">
+          <li class="choice-item" data-choice="a" data-choice-num="①">
+            <span class="choice-num">①</span>
+            생식, 항상성
+          </li>
+          <li class="choice-item" data-choice="b" data-choice-num="②">
+            <span class="choice-num">②</span>
+            유전, 생장
+          </li>
+          <li class="choice-item" data-choice="c" data-choice-num="③">
+            <span class="choice-num">③</span>
+            적응, 진화
+          </li>
+          <li class="choice-item" data-choice="d" data-choice-num="④">
+            <span class="choice-num">④</span>
+            생식, 유전
+          </li>
+          <li class="choice-item" data-choice="e" data-choice-num="⑤">
+            <span class="choice-num">⑤</span>
+            세포 구조, 물질대사, 항상성
+          </li>
+        </ul>
+        <div class="feedback-box">
+          <div class="feedback-header">
+            <span class="feedback-icon"></span>
+            <span class="feedback-title"></span>
+          </div>
+          <div class="feedback-body">
+            <strong>정답: ⑤</strong><br>
+            바이러스는 <strong>세포 구조가 없으며</strong>(단백질 껍질 + 핵산),
+            스스로 <strong>물질대사</strong>를 하지 못하고 살아있는 세포에 기생해야 활성화됩니다.
+            또한 <strong>항상성</strong>도 나타나지 않습니다.<br><br>
+            반면 바이러스는 숙주 세포 안에서 증식(생식)하고, 유전 물질(DNA 또는 RNA)을 통해 유전이 일어나며, 적응과 진화도 나타납니다.
+          </div>
+        </div>
+      </div>
+
+      <!-- 제출 & 재시도 버튼 -->
+      <div class="btn-group" style="justify-content:center; margin:24px 0;">
+        <button id="quiz-submit" class="btn btn-primary" style="font-size:16px; padding:14px 40px;">
+          📋 답안 제출하기
+        </button>
+        <button id="quiz-retry" class="btn btn-secondary">
+          🔄 다시 풀기
+        </button>
+      </div>
+
+      <!-- 점수 패널 -->
+      <div id="score-panel" class="score-panel">
+        <div class="score-circle">
+          <span class="score-num">0</span>
+          <span class="score-total">/ 5</span>
+        </div>
+        <h3 id="score-title">결과 확인</h3>
+        <p class="score-message">채점 중...</p>
+        <p class="score-percent" style="color:var(--primary-600); font-weight:700; font-size:16px; margin-bottom:12px;"></p>
+        <div class="score-breakdown">
+          <div class="score-item correct-count">
+            <span class="score-count">-</span>
+            <span class="score-label">정답</span>
+          </div>
+          <div class="score-item wrong-count">
+            <span class="score-count">-</span>
+            <span class="score-label">오답</span>
+          </div>
+        </div>
+        <div class="btn-group" style="justify-content:center;">
+          <button class="btn btn-secondary" onclick="Quiz.reset()">🔄 다시 풀기</button>
+          <a href="units.html" class="btn btn-ghost">📚 단원 목록으로</a>
+        </div>
+      </div>
+
+    </div>
+    <!-- // tab-quiz -->
+
+    <!-- 하단 내비게이션 -->
+    <div class="lesson-nav">
+      <a href="#" class="lesson-nav-btn" id="prev-lesson">
+        <span>←</span>
+        <span>
+          <span class="nav-sub">이전 소단원</span>
+          <span class="nav-main" id="prev-title">–</span>
+        </span>
+      </a>
+      <a href="units.html" class="btn btn-ghost">📚 목록</a>
+      <a href="#" class="lesson-nav-btn" id="next-lesson">
+        <span>
+          <span class="nav-sub">다음 소단원</span>
+          <span class="nav-main" id="next-title">–</span>
+        </span>
+        <span>→</span>
+      </a>
+    </div>
+
+  </main>
+</div>
+
+<!-- 모바일 오버레이 -->
+<div id="sidebar-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:940;"></div>
+
+<script src="../assets/js/main.js"></script>
+<script>
+  // 피드백 박스 정답/오답 아이콘·텍스트 자동 처리
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.feedback-box').forEach(box => {
+      const header = box.querySelector('.feedback-header');
+      const icon   = box.querySelector('.feedback-icon');
+      const title  = box.querySelector('.feedback-title');
+
+      // MutationObserver 로 visible 클래스 감지 후 업데이트
+      const obs = new MutationObserver(() => {
+        if (box.classList.contains('correct-feedback')) {
+          icon.textContent  = '✅';
+          title.textContent = '정답입니다!';
+        } else if (box.classList.contains('wrong-feedback')) {
+          icon.textContent  = '❌';
+          title.textContent = '오답입니다. 해설을 확인하세요.';
+        }
+      });
+      obs.observe(box, { attributes: true, attributeFilter: ['class'] });
+    });
+
+    // 이전/다음 단원 링크 설정 (예시)
+    const lessonId = getQueryParam('lesson') || '1-1';
+    document.getElementById('prev-title').textContent = '–';
+    document.getElementById('next-title').textContent = '생명 과학의 탐구 방법';
+    document.getElementById('next-lesson').href = `lesson.html?lesson=1-2&tab=concept`;
+  });
+</script>
+</body>
+</html>
