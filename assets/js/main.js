@@ -6,95 +6,145 @@
 /* ===================================================
    22개정 생명과학 단원 데이터
    =================================================== */
+/* ===================================================
+   22개정 생명과학 I 단원 구조
+   대단원 3개 / 중단원 8개 / 소단원 26개
+   =================================================== */
+
+// 사이드바·진도 계산용 평탄화 데이터 (소단원 단위)
 const BIOLOGY_UNITS = [
+
+  /* ────────────────────────────────────────
+     대단원 1. 생명 시스템의 구성
+     ──────────────────────────────────────── */
   {
-    id: 1,
-    romanNum: 'Ⅰ',
-    title: '생명 과학의 이해',
-    icon: '🔬',
-    iconClass: 'blue',
-    desc: '생명 과학의 특성과 탐구 방법을 이해한다.',
+    id: '1-1',
+    unitNum: '대단원 1',
+    chapterNum: '중단원 1)',
+    chapterTitle: '생명과학의 이해',
+    icon: '🔬', iconClass: 'blue',
     lessons: [
-      { id: '1-1', title: '생명 현상의 특성', type: '개념+영상' },
-      { id: '1-2', title: '생명 과학의 탐구 방법', type: '실험' },
+      { id: '1-1-01', num: '01', title: '생물의 특성',           activity: '영상' },
+      { id: '1-1-02', num: '02', title: '생명과학의 특성',        activity: '탐구' },
+      { id: '1-1-03', num: '03', title: '생명 시스템의 구성 단계', activity: '영상' },
     ]
   },
   {
-    id: 2,
-    romanNum: 'Ⅱ',
-    title: '세포의 구조와 기능',
-    icon: '🧫',
-    iconClass: 'green',
-    desc: '세포의 구조와 각 세포 소기관의 기능을 탐구한다.',
+    id: '1-2',
+    unitNum: '대단원 1',
+    chapterNum: '중단원 2)',
+    chapterTitle: '생명활동과 에너지',
+    icon: '⚗️', iconClass: 'orange',
     lessons: [
-      { id: '2-1', title: '세포의 구조', type: '개념+영상' },
-      { id: '2-2', title: '세포막을 통한 물질 이동', type: '실험' },
+      { id: '1-2-01', num: '01', title: '물질대사와 에너지전환',  activity: '실험' },
+      { id: '1-2-02', num: '02', title: '기관계의 통합적 작용',   activity: '영상' },
+      { id: '1-2-03', num: '03', title: '물질대사와 건강',        activity: '탐구' },
     ]
   },
   {
-    id: 3,
-    romanNum: 'Ⅲ',
-    title: '물질대사',
-    icon: '⚗️',
-    iconClass: 'orange',
-    desc: '효소의 작용 원리와 세포 호흡, 광합성을 탐구한다.',
+    id: '1-3',
+    unitNum: '대단원 1',
+    chapterNum: '중단원 3)',
+    chapterTitle: '생태계와 상호작용',
+    icon: '🌍', iconClass: 'green',
     lessons: [
-      { id: '3-1', title: '효소', type: '실험' },
-      { id: '3-2', title: '세포 호흡', type: '개념+영상' },
-      { id: '3-3', title: '광합성', type: '개념+영상' },
+      { id: '1-3-01', num: '01', title: '생태계의 구조',          activity: '탐구' },
+      { id: '1-3-02', num: '02', title: '물질순환과 에너지흐름',   activity: '영상' },
+      { id: '1-3-03', num: '03', title: '개체군',                 activity: '실험' },
+      { id: '1-3-04', num: '04', title: '군집',                   activity: '탐구' },
+    ]
+  },
+
+  /* ────────────────────────────────────────
+     대단원 2. 항상성과 몸의 조절
+     ──────────────────────────────────────── */
+  {
+    id: '2-1',
+    unitNum: '대단원 2',
+    chapterNum: '중단원 1)',
+    chapterTitle: '신경자극전도와 시냅스전달',
+    icon: '⚡', iconClass: 'purple',
+    lessons: [
+      { id: '2-1-01', num: '01', title: '신경자극전도',           activity: '영상' },
+      { id: '2-1-02', num: '02', title: '시냅스전달',             activity: '영상' },
     ]
   },
   {
-    id: 4,
-    romanNum: 'Ⅳ',
-    title: '유전자와 생명 공학',
-    icon: '🧬',
-    iconClass: 'purple',
-    desc: 'DNA 구조와 유전 정보의 발현 과정을 이해한다.',
+    id: '2-2',
+    unitNum: '대단원 2',
+    chapterNum: '중단원 2)',
+    chapterTitle: '신경계와 항상성',
+    icon: '🫀', iconClass: 'blue',
     lessons: [
-      { id: '4-1', title: 'DNA와 유전자', type: '개념+영상' },
-      { id: '4-2', title: '유전 정보의 발현', type: '개념+영상' },
-      { id: '4-3', title: '생명 공학 기술', type: '개념' },
+      { id: '2-2-01', num: '01', title: '사람의 신경계',          activity: '영상' },
+      { id: '2-2-02', num: '02', title: '항상성 유지',            activity: '실험' },
     ]
   },
   {
-    id: 5,
-    romanNum: 'Ⅴ',
-    title: '생물의 진화와 다양성',
-    icon: '🌿',
-    iconClass: 'teal',
-    desc: '생물의 분류 체계와 진화의 원리를 탐구한다.',
+    id: '2-3',
+    unitNum: '대단원 2',
+    chapterNum: '중단원 3)',
+    chapterTitle: '우리 몸의 방어 작용',
+    icon: '🛡️', iconClass: 'teal',
     lessons: [
-      { id: '5-1', title: '생물의 분류', type: '개념' },
-      { id: '5-2', title: '생물의 진화', type: '개념+영상' },
+      { id: '2-3-01', num: '01', title: '병원체와 방어 작용',          activity: '영상' },
+      { id: '2-3-02', num: '02', title: '항원항체반응과 혈액형',        activity: '실험' },
+      { id: '2-3-03', num: '03', title: '백신의 작용 원리와 종류',      activity: '탐구' },
+    ]
+  },
+
+  /* ────────────────────────────────────────
+     대단원 3. 생명의 연속성과 다양성
+     ──────────────────────────────────────── */
+  {
+    id: '3-1',
+    unitNum: '대단원 3',
+    chapterNum: '중단원 1)',
+    chapterTitle: '염색체와 생식세포 형성',
+    icon: '🧬', iconClass: 'purple',
+    lessons: [
+      { id: '3-1-01', num: '01', title: '염색체, DNA, 유전자',     activity: '영상' },
+      { id: '3-1-02', num: '02', title: '생식세포 형성의 중요성',   activity: '실험' },
     ]
   },
   {
-    id: 6,
-    romanNum: 'Ⅵ',
-    title: '인체의 구조와 기능',
-    icon: '🫀',
-    iconClass: 'blue',
-    desc: '신경계, 호르몬, 면역의 작용 원리를 이해한다.',
+    id: '3-2',
+    unitNum: '대단원 3',
+    chapterNum: '중단원 2)',
+    chapterTitle: '생물의 진화와 다양성',
+    icon: '🌿', iconClass: 'teal',
     lessons: [
-      { id: '6-1', title: '신경계', type: '개념+영상' },
-      { id: '6-2', title: '호르몬과 항상성', type: '개념+영상' },
-      { id: '6-3', title: '방어 작용', type: '개념+영상' },
+      { id: '3-2-01', num: '01', title: '생물의 진화',             activity: '영상' },
+      { id: '3-2-02', num: '02', title: '식물의 분류체계',          activity: '탐구' },
+      { id: '3-2-03', num: '03', title: '식물의 분류',              activity: '탐구' },
+      { id: '3-2-04', num: '04', title: '동물의 분류',              activity: '탐구' },
     ]
   },
+];
+
+/* 대단원 메타 정보 */
+const MAJOR_UNITS = [
   {
-    id: 7,
-    romanNum: 'Ⅶ',
-    title: '생태계와 상호 작용',
-    icon: '🌍',
-    iconClass: 'green',
-    desc: '생태계의 구성과 에너지 흐름, 물질 순환을 탐구한다.',
-    lessons: [
-      { id: '7-1', title: '생태계의 구성과 기능', type: '개념' },
-      { id: '7-2', title: '에너지 흐름과 물질 순환', type: '개념+영상' },
-      { id: '7-3', title: '생물 다양성 보전', type: '개념' },
-    ]
-  }
+    id: 1, num: '대단원 1',
+    title: '생명 시스템의 구성',
+    icon: '🔬', iconClass: 'blue',
+    desc: '생명과학의 이해, 생명활동과 에너지, 생태계와 상호작용을 탐구한다.',
+    chapterIds: ['1-1','1-2','1-3'],
+  },
+  {
+    id: 2, num: '대단원 2',
+    title: '항상성과 몸의 조절',
+    icon: '⚡', iconClass: 'purple',
+    desc: '신경자극전도, 신경계와 항상성, 우리 몸의 방어 작용을 이해한다.',
+    chapterIds: ['2-1','2-2','2-3'],
+  },
+  {
+    id: 3, num: '대단원 3',
+    title: '생명의 연속성과 다양성',
+    icon: '🧬', iconClass: 'teal',
+    desc: '염색체와 생식세포 형성, 생물의 진화와 다양성을 탐구한다.',
+    chapterIds: ['3-1','3-2'],
+  },
 ];
 
 /* ===================================================
@@ -126,7 +176,7 @@ const Progress = {
   },
 
   getTotalLessons() {
-    return BIOLOGY_UNITS.reduce((sum, u) => sum + u.lessons.length, 0);
+    return BIOLOGY_UNITS.reduce((sum, ch) => sum + ch.lessons.length, 0);
   },
 
   getPercent() {
@@ -164,31 +214,49 @@ const Sidebar = {
     const prog = Progress.get();
     let html = '';
 
-    BIOLOGY_UNITS.forEach(unit => {
-      const isOpen = this.currentLesson && unit.lessons.some(l => l.id === this.currentLesson);
+    // 대단원별로 그룹핑하여 렌더링
+    MAJOR_UNITS.forEach(major => {
+      const chapters = BIOLOGY_UNITS.filter(u => major.chapterIds.includes(u.id));
+      const hasCurrentInMajor = chapters.some(ch => ch.lessons.some(l => l.id === this.currentLesson));
+
       html += `
-        <div class="unit-item">
-          <div class="unit-title ${isOpen ? 'active open' : ''}" 
-               onclick="Sidebar.toggleUnit(this)" 
-               data-unit="${unit.id}">
-            <span class="unit-num roman">${unit.romanNum}</span>
-            <span>${unit.title}</span>
+        <div class="sidebar-major-item">
+          <div class="sidebar-major-title ${hasCurrentInMajor ? 'open' : ''}"
+               onclick="Sidebar.toggleMajor(this)">
+            <span class="unit-num" style="font-size:10px;">${major.id}</span>
+            <span>${major.title}</span>
             <span class="chevron">▼</span>
           </div>
-          <ul class="lesson-list ${isOpen ? 'open' : ''}">
-            ${unit.lessons.map(lesson => {
-              const done = prog[lesson.id]?.completed;
-              const isCurrent = lesson.id === this.currentLesson;
+          <div class="sidebar-major-body ${hasCurrentInMajor ? 'open' : ''}">
+            ${chapters.map(chapter => {
+              const isChapterOpen = chapter.lessons.some(l => l.id === this.currentLesson);
               return `
-                <li class="lesson-item ${isCurrent ? 'active' : ''}"
-                    onclick="Sidebar.goLesson('${lesson.id}')">
-                  <span class="lesson-dot"></span>
-                  <span>${lesson.title}</span>
-                  ${done ? '<span class="progress-badge">완료</span>' : ''}
-                </li>
+                <div class="unit-item">
+                  <div class="unit-title ${isChapterOpen ? 'active open' : ''}"
+                       onclick="Sidebar.toggleUnit(this)"
+                       data-chapter="${chapter.id}">
+                    <span class="unit-num roman" style="font-size:9px;width:18px;height:18px;">${chapter.chapterNum}</span>
+                    <span style="font-size:12.5px;">${chapter.chapterTitle}</span>
+                    <span class="chevron">▼</span>
+                  </div>
+                  <ul class="lesson-list ${isChapterOpen ? 'open' : ''}">
+                    ${chapter.lessons.map(lesson => {
+                      const done = prog[lesson.id]?.completed;
+                      const isCurrent = lesson.id === this.currentLesson;
+                      return `
+                        <li class="lesson-item ${isCurrent ? 'active' : ''}"
+                            onclick="Sidebar.goLesson('${lesson.id}')">
+                          <span class="lesson-dot"></span>
+                          <span>${lesson.num}. ${lesson.title}</span>
+                          ${done ? '<span class="progress-badge">완료</span>' : ''}
+                        </li>
+                      `;
+                    }).join('')}
+                  </ul>
+                </div>
               `;
             }).join('')}
-          </ul>
+          </div>
         </div>
       `;
     });
@@ -197,15 +265,28 @@ const Sidebar = {
     Progress.updateUI();
   },
 
-  toggleUnit(el) {
+  toggleMajor(el) {
+    const body = el.nextElementSibling;
     const isOpen = el.classList.contains('open');
     // 모두 닫기
-    document.querySelectorAll('.unit-title').forEach(t => {
+    document.querySelectorAll('.sidebar-major-title').forEach(t => {
+      t.classList.remove('open');
+      if (t.nextElementSibling) t.nextElementSibling.classList.remove('open');
+    });
+    if (!isOpen) {
+      el.classList.add('open');
+      body?.classList.add('open');
+    }
+  },
+
+  toggleUnit(el) {
+    const isOpen = el.classList.contains('open');
+    // 같은 대단원 안에서만 닫기
+    el.closest('.sidebar-major-body')?.querySelectorAll('.unit-title').forEach(t => {
       t.classList.remove('open', 'active');
       const list = t.nextElementSibling;
       if (list) list.classList.remove('open');
     });
-    // 클릭한 것만 토글
     if (!isOpen) {
       el.classList.add('open', 'active');
       const list = el.nextElementSibling;
@@ -214,6 +295,8 @@ const Sidebar = {
   },
 
   goLesson(lessonId) {
+    // pages/ 하위에서 호출 시 상대 경로 유지
+    const isInPages = window.location.pathname.includes('/pages/');
     window.location.href = `lesson.html?lesson=${lessonId}`;
   },
 
@@ -426,11 +509,19 @@ const Quiz = {
    유틸리티
    =================================================== */
 function getLessonData(lessonId) {
-  for (const unit of BIOLOGY_UNITS) {
-    const lesson = unit.lessons.find(l => l.id === lessonId);
-    if (lesson) return { unit, lesson };
+  for (const chapter of BIOLOGY_UNITS) {
+    const lesson = chapter.lessons.find(l => l.id === lessonId);
+    if (lesson) {
+      const major = MAJOR_UNITS.find(m => m.chapterIds.includes(chapter.id));
+      return { major, chapter, lesson };
+    }
   }
   return null;
+}
+
+// 전체 소단원 수 (진도 계산용)
+function getTotalLessons() {
+  return BIOLOGY_UNITS.reduce((sum, ch) => sum + ch.lessons.length, 0);
 }
 
 function getQueryParam(key) {

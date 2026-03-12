@@ -6,242 +6,124 @@
   <title>단원 목록 – 생명과학 I</title>
   <link rel="stylesheet" href="../assets/css/style.css" />
   <style>
-    /* units.html 전용 스타일 */
-
     .units-page-hero {
       background: linear-gradient(135deg, var(--primary-50) 0%, #fff 100%);
       padding: 48px 48px 36px;
       border-bottom: 1px solid var(--gray-200);
     }
-
     .units-page-hero .hero-label {
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--primary-500);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 8px;
+      font-size: 12px; font-weight: 700; color: var(--primary-500);
+      text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;
     }
-
     .units-page-hero h1 {
-      font-family: var(--font-serif);
-      font-size: 28px;
-      font-weight: 700;
-      color: var(--gray-900);
-      margin-bottom: 8px;
-      letter-spacing: -0.3px;
+      font-family: var(--font-serif); font-size: 28px; font-weight: 700;
+      color: var(--gray-900); margin-bottom: 8px; letter-spacing: -0.3px;
     }
+    .units-page-hero p { font-size: 14.5px; color: var(--gray-500); line-height: 1.7; }
 
-    .units-page-hero p {
-      font-size: 14.5px;
-      color: var(--gray-500);
-      line-height: 1.7;
-    }
-
-    /* 단원 전체 목록 레이아웃 */
-    .unit-full-list {
-      padding: 40px 48px 60px;
-    }
-
-    /* 단원 행 */
-    .unit-row {
-      background: #fff;
-      border: 1.5px solid var(--gray-200);
+    /* ── 대단원 섹션 ── */
+    .major-unit-section {
+      margin: 32px 48px 0;
       border-radius: var(--border-radius-lg);
-      margin-bottom: 20px;
       overflow: hidden;
+      border: 1.5px solid var(--gray-200);
       box-shadow: var(--shadow-sm);
-      transition: var(--transition);
+    }
+    .major-unit-header {
+      display: flex; align-items: center; gap: 20px;
+      padding: 22px 28px;
+      color: #fff;
+      position: relative;
+    }
+    .major-unit-header.blue   { background: linear-gradient(135deg, #1a8dcb, #0f5a87); }
+    .major-unit-header.purple { background: linear-gradient(135deg, #7c3aed, #4c1d95); }
+    .major-unit-header.teal   { background: linear-gradient(135deg, #0d9488, #065f46); }
+
+    .major-unit-icon {
+      width: 52px; height: 52px; background: rgba(255,255,255,0.2);
+      border-radius: 14px; display: flex; align-items: center;
+      justify-content: center; font-size: 26px; flex-shrink: 0;
+    }
+    .major-unit-info { flex: 1; }
+    .major-unit-num  { font-size: 11px; font-weight: 700; opacity: 0.8; margin-bottom: 3px; letter-spacing: 0.5px; }
+    .major-unit-title { font-size: 20px; font-weight: 700; margin-bottom: 4px; font-family: var(--font-serif); }
+    .major-unit-desc  { font-size: 13px; opacity: 0.85; }
+    .major-unit-count {
+      background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 20px; font-size: 12px; padding: 5px 14px;
     }
 
-    .unit-row:hover {
-      box-shadow: var(--shadow-md);
-      border-color: var(--primary-200);
-    }
-
-    /* 단원 헤더 행 */
-    .unit-row-header {
-      display: flex;
-      align-items: center;
-      padding: 20px 28px;
-      gap: 20px;
-      cursor: pointer;
+    /* ── 중단원 그룹 ── */
+    .chapter-group {
       background: #fff;
-      transition: var(--transition);
-    }
-
-    .unit-row-header:hover {
-      background: var(--primary-50);
-    }
-
-    .unit-row-icon {
-      width: 52px;
-      height: 52px;
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      flex-shrink: 0;
-    }
-
-    .unit-row-info {
-      flex: 1;
-    }
-
-    .unit-row-num {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--primary-500);
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      margin-bottom: 2px;
-    }
-
-    .unit-row-title {
-      font-size: 17px;
-      font-weight: 700;
-      color: var(--gray-800);
-      margin-bottom: 4px;
-    }
-
-    .unit-row-desc {
-      font-size: 13px;
-      color: var(--gray-500);
-    }
-
-    .unit-row-meta {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 6px;
-      flex-shrink: 0;
-    }
-
-    .unit-row-count {
-      font-size: 12.5px;
-      color: var(--gray-500);
-      background: var(--gray-100);
-      padding: 3px 10px;
-      border-radius: 10px;
-    }
-
-    .unit-toggle-icon {
-      font-size: 12px;
-      color: var(--gray-400);
-      transition: transform 0.25s ease;
-    }
-
-    .unit-row.open .unit-toggle-icon {
-      transform: rotate(180deg);
-    }
-
-    /* 소단원 목록 */
-    .lesson-grid {
-      display: none;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 14px;
-      padding: 16px 28px 24px;
-      background: var(--gray-50);
       border-top: 1px solid var(--gray-200);
     }
-
-    .lesson-grid.open {
-      display: grid;
-    }
-
-    .lesson-grid-item {
-      background: #fff;
-      border: 1.5px solid var(--gray-200);
-      border-radius: var(--border-radius);
-      padding: 18px 20px;
-      display: flex;
-      align-items: flex-start;
-      gap: 14px;
+    .chapter-group-header {
+      display: flex; align-items: center; gap: 14px;
+      padding: 16px 28px;
+      background: var(--gray-50);
+      border-bottom: 1px solid var(--gray-100);
       cursor: pointer;
       transition: var(--transition);
-      text-decoration: none;
-      color: inherit;
     }
+    .chapter-group-header:hover { background: var(--primary-50); }
+    .chapter-group-header.open  { background: var(--primary-50); }
 
-    .lesson-grid-item:hover {
-      border-color: var(--primary-300);
-      background: var(--primary-50);
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-blue);
-    }
-
-    .lesson-grid-item .lesson-num-badge {
-      width: 28px;
-      height: 28px;
+    .chapter-num-badge {
+      font-size: 11px; font-weight: 700;
+      color: var(--primary-700);
       background: var(--primary-100);
-      color: var(--primary-700);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      font-weight: 700;
-      flex-shrink: 0;
-      margin-top: 1px;
+      padding: 3px 10px; border-radius: 10px; flex-shrink: 0;
     }
-
-    .lesson-grid-item .lesson-info { flex: 1; }
-
-    .lesson-grid-item .lesson-name {
-      font-size: 14.5px;
-      font-weight: 700;
-      color: var(--gray-800);
-      margin-bottom: 6px;
-      line-height: 1.4;
+    .chapter-title-text {
+      font-size: 15px; font-weight: 700; color: var(--gray-800); flex: 1;
     }
-
-    .lesson-grid-item .lesson-type-badges {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
+    .chapter-count { font-size: 12px; color: var(--gray-400); }
+    .chapter-chevron {
+      font-size: 11px; color: var(--gray-400);
+      transition: transform 0.2s ease; margin-left: 4px;
     }
+    .chapter-group-header.open .chapter-chevron { transform: rotate(180deg); }
 
-    .type-tag {
-      font-size: 11px;
-      padding: 2px 8px;
-      border-radius: 8px;
-      font-weight: 600;
+    /* ── 소단원 그리드 ── */
+    .lesson-grid {
+      display: none;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 12px;
+      padding: 16px 28px 20px;
+      background: #fff;
     }
+    .lesson-grid.open { display: grid; }
 
-    .type-tag.concept {
-      background: var(--primary-50);
-      color: var(--primary-700);
+    .lesson-grid-item {
+      background: var(--gray-50); border: 1.5px solid var(--gray-200);
+      border-radius: var(--border-radius); padding: 16px 18px;
+      display: flex; align-items: flex-start; gap: 12px;
+      cursor: pointer; transition: var(--transition);
+      text-decoration: none; color: inherit;
     }
+    .lesson-grid-item:hover {
+      border-color: var(--primary-300); background: var(--primary-50);
+      transform: translateY(-2px); box-shadow: var(--shadow-blue);
+    }
+    .lesson-num-badge {
+      width: 26px; height: 26px; background: var(--primary-100);
+      color: var(--primary-700); border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; flex-shrink: 0;
+    }
+    .lesson-info { flex: 1; }
+    .lesson-name { font-size: 14px; font-weight: 700; color: var(--gray-800); margin-bottom: 7px; line-height: 1.4; }
+    .lesson-activity-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 8px;
+    }
+    .act-sim    { background: rgba(34,197,94,0.12);  color: var(--green-700); }
+    .act-video  { background: rgba(26,141,203,0.10); color: var(--primary-700); }
+    .act-inquiry{ background: rgba(245,158,11,0.12); color: #92400e; }
 
-    .type-tag.sim {
-      background: rgba(34,197,94,0.10);
-      color: var(--green-700);
-    }
-
-    .type-tag.video {
-      background: rgba(139,92,246,0.10);
-      color: #5b21b6;
-    }
-
-    .lesson-grid-item .lesson-status {
-      font-size: 11px;
-      padding: 2px 8px;
-      border-radius: 8px;
-      margin-top: 6px;
-      display: inline-block;
-    }
-
-    .status-done {
-      background: rgba(34,197,94,0.12);
-      color: var(--green-700);
-      font-weight: 600;
-    }
-
-    .status-new {
-      background: var(--gray-100);
-      color: var(--gray-500);
-    }
+    .section-spacer { height: 20px; }
+    .units-list-wrap { padding-bottom: 60px; }
   </style>
 </head>
 <body>
@@ -259,7 +141,7 @@
     <nav class="header-nav">
       <a href="../index.html">🏠 홈</a>
       <a href="units.html" class="active">📚 단원</a>
-      <a href="lesson.html?lesson=1-1&tab=concept">📖 학습</a>
+      <a href="lesson.html?lesson=1-1-01&tab=concept">📖 학습</a>
       <span class="header-badge">2022 개정</span>
     </nav>
     <button id="menu-toggle" class="btn btn-ghost" style="display:none;">☰</button>
@@ -271,9 +153,7 @@
 
   <!-- 사이드바 -->
   <aside class="sidebar">
-    <div class="sidebar-header">
-      <h3>단원 목차</h3>
-    </div>
+    <div class="sidebar-header"><h3>단원 목차</h3></div>
     <nav class="unit-nav" id="sidebar-nav"></nav>
     <div class="sidebar-footer">
       <div class="progress-summary">
@@ -305,341 +185,342 @@
     <div class="units-page-hero">
       <p class="hero-label">22개정 · 생명과학 I (일반선택)</p>
       <h1>전체 단원 목록</h1>
-      <p>7개 단원, 총 18개 소단원으로 구성되어 있습니다.<br>
-         각 소단원은 <strong>개념 학습 → 탐구 활동 → 형성평가</strong> 순으로 진행됩니다.</p>
+      <p>대단원 3개 · 중단원 8개 · 소단원 26개로 구성되어 있습니다.<br>
+         각 소단원은 <strong>개념 학습 → 탐구 활동 (실험·영상) → 형성평가</strong> 순으로 진행됩니다.</p>
     </div>
 
-    <!-- 단원 전체 목록 -->
-    <div class="unit-full-list">
+    <div class="units-list-wrap">
 
-      <!-- ── 단원 I ── -->
-      <div class="unit-row" id="unit-row-1">
-        <div class="unit-row-header" onclick="toggleUnit('unit-row-1')">
-          <div class="unit-row-icon blue">🔬</div>
-          <div class="unit-row-info">
-            <div class="unit-row-num">단원 Ⅰ</div>
-            <div class="unit-row-title">생명 과학의 이해</div>
-            <div class="unit-row-desc">생명 현상의 특성과 생명 과학의 탐구 방법을 이해한다.</div>
+      <!-- ══════════════════════════════════════
+           대단원 1. 생명 시스템의 구성
+           ══════════════════════════════════════ -->
+      <div id="unit-1" class="major-unit-section fade-in-up">
+        <div class="major-unit-header blue">
+          <div class="major-unit-icon">🔬</div>
+          <div class="major-unit-info">
+            <div class="major-unit-num">대단원 1</div>
+            <div class="major-unit-title">생명 시스템의 구성</div>
+            <div class="major-unit-desc">생명과학의 이해 / 생명활동과 에너지 / 생태계와 상호작용</div>
           </div>
-          <div class="unit-row-meta">
-            <span class="unit-row-count">소단원 2개</span>
-            <span class="unit-toggle-icon">▼</span>
+          <span class="major-unit-count">중단원 3 · 소단원 10</span>
+        </div>
+
+        <!-- 중단원 1-1 -->
+        <div class="chapter-group">
+          <div class="chapter-group-header open" onclick="toggleChapter(this)">
+            <span class="chapter-num-badge">중단원 1)</span>
+            <span class="chapter-title-text">생명과학의 이해</span>
+            <span class="chapter-count">소단원 3개</span>
+            <span class="chapter-chevron">▼</span>
+          </div>
+          <div class="lesson-grid open">
+            <a href="lesson.html?lesson=1-1-01&tab=concept" class="lesson-grid-item">
+              <span class="lesson-num-badge">01</span>
+              <div class="lesson-info">
+                <div class="lesson-name">생물의 특성</div>
+                <span class="lesson-activity-badge act-video">📹 영상</span>
+              </div>
+            </a>
+            <a href="lesson.html?lesson=1-1-02&tab=concept" class="lesson-grid-item">
+              <span class="lesson-num-badge">02</span>
+              <div class="lesson-info">
+                <div class="lesson-name">생명과학의 특성</div>
+                <span class="lesson-activity-badge act-inquiry">🔍 탐구</span>
+              </div>
+            </a>
+            <a href="lesson.html?lesson=1-1-03&tab=concept" class="lesson-grid-item">
+              <span class="lesson-num-badge">03</span>
+              <div class="lesson-info">
+                <div class="lesson-name">생명 시스템의 구성 단계</div>
+                <span class="lesson-activity-badge act-video">📹 영상</span>
+              </div>
+            </a>
           </div>
         </div>
-        <div class="lesson-grid" id="lessons-1">
-          <a href="lesson.html?lesson=1-1&tab=concept" class="lesson-grid-item">
-            <span class="lesson-num-badge">1</span>
-            <div class="lesson-info">
-              <div class="lesson-name">생명 현상의 특성</div>
-              <div class="lesson-type-badges">
-                <span class="type-tag concept">개념</span>
-                <span class="type-tag video">영상</span>
+
+        <!-- 중단원 1-2 -->
+        <div class="chapter-group">
+          <div class="chapter-group-header" onclick="toggleChapter(this)">
+            <span class="chapter-num-badge">중단원 2)</span>
+            <span class="chapter-title-text">생명활동과 에너지</span>
+            <span class="chapter-count">소단원 3개</span>
+            <span class="chapter-chevron">▼</span>
+          </div>
+          <div class="lesson-grid">
+            <a href="lesson.html?lesson=1-2-01&tab=concept" class="lesson-grid-item">
+              <span class="lesson-num-badge">01</span>
+              <div class="lesson-info">
+                <div class="lesson-name">물질대사와 에너지전환</div>
+                <span class="lesson-activity-badge act-sim">🧪 실험</span>
               </div>
-            </div>
-          </a>
-          <a href="lesson.html?lesson=1-2&tab=concept" class="lesson-grid-item">
-            <span class="lesson-num-badge">2</span>
-            <div class="lesson-info">
-              <div class="lesson-name">생명 과학의 탐구 방법</div>
-              <div class="lesson-type-badges">
-                <span class="type-tag concept">개념</span>
-                <span class="type-tag sim">실험</span>
+            </a>
+            <a href="lesson.html?lesson=1-2-02&tab=concept" class="lesson-grid-item">
+              <span class="lesson-num-badge">02</span>
+              <div class="lesson-info">
+                <div class="lesson-name">기관계의 통합적 작용</div>
+                <span class="lesson-activity-badge act-video">📹 영상</span>
               </div>
-            </div>
-          </a>
+            </a>
+            <a href="lesson.html?lesson=1-2-03&tab=concept" class="lesson-grid-item">
+              <span class="lesson-num-badge">03</span>
+              <div class="lesson-info">
+                <div class="lesson-name">물질대사와 건강</div>
+                <span class="lesson-activity-badge act-inquiry">🔍 탐구</span>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- 중단원 1-3 -->
+        <div class="chapter-group">
+          <div class="chapter-group-header" onclick="toggleChapter(this)">
+            <span class="chapter-num-badge">중단원 3)</span>
+            <span class="chapter-title-text">생태계와 상호작용</span>
+            <span class="chapter-count">소단원 4개</span>
+            <span class="chapter-chevron">▼</span>
+          </div>
+          <div class="lesson-grid">
+            <a href="lesson.html?lesson=1-3-01&tab=concept" class="lesson-grid-item">
+              <span class="lesson-num-badge">01</span>
+              <div class="lesson-info">
+                <div class="lesson-name">생태계의 구조</div>
+                <span class="lesson-activity-badge act-inquiry">🔍 탐구</span>
+              </div>
+            </a>
+            <a href="lesson.html?lesson=1-3-02&tab=concept" class="lesson-grid-item">
+              <span class="lesson-num-badge">02</span>
+              <div class="lesson-info">
+                <div class="lesson-name">물질순환과 에너지흐름</div>
+                <span class="lesson-activity-badge act-video">📹 영상</span>
+              </div>
+            </a>
+            <a href="lesson.html?lesson=1-3-03&tab=concept" class="lesson-grid-item">
+              <span class="lesson-num-badge">03</span>
+              <div class="lesson-info">
+                <div class="lesson-name">개체군</div>
+                <span class="lesson-activity-badge act-sim">🧪 실험</span>
+              </div>
+            </a>
+            <a href="lesson.html?lesson=1-3-04&tab=concept" class="lesson-grid-item">
+              <span class="lesson-num-badge">04</span>
+              <div class="lesson-info">
+                <div class="lesson-name">군집</div>
+                <span class="lesson-activity-badge act-inquiry">🔍 탐구</span>
+              </div>
+            </a>
+          </div>
         </div>
       </div>
 
-      <!-- ── 단원 II ── -->
-      <div class="unit-row" id="unit-row-2">
-        <div class="unit-row-header" onclick="toggleUnit('unit-row-2')">
-          <div class="unit-row-icon green">🧫</div>
-          <div class="unit-row-info">
-            <div class="unit-row-num">단원 Ⅱ</div>
-            <div class="unit-row-title">세포의 구조와 기능</div>
-            <div class="unit-row-desc">세포 소기관의 구조·기능, 세포막을 통한 물질 이동을 탐구한다.</div>
+      <div class="section-spacer"></div>
+
+      <!-- ══════════════════════════════════════
+           대단원 2. 항상성과 몸의 조절
+           ══════════════════════════════════════ -->
+      <div id="unit-2" class="major-unit-section fade-in-up delay-1">
+        <div class="major-unit-header purple">
+          <div class="major-unit-icon">⚡</div>
+          <div class="major-unit-info">
+            <div class="major-unit-num">대단원 2</div>
+            <div class="major-unit-title">항상성과 몸의 조절</div>
+            <div class="major-unit-desc">신경자극전도와 시냅스전달 / 신경계와 항상성 / 우리 몸의 방어 작용</div>
           </div>
-          <div class="unit-row-meta">
-            <span class="unit-row-count">소단원 2개</span>
-            <span class="unit-toggle-icon">▼</span>
+          <span class="major-unit-count">중단원 3 · 소단원 7</span>
+        </div>
+
+        <!-- 중단원 2-1 -->
+        <div class="chapter-group">
+          <div class="chapter-group-header" onclick="toggleChapter(this)">
+            <span class="chapter-num-badge">중단원 1)</span>
+            <span class="chapter-title-text">신경자극전도와 시냅스전달</span>
+            <span class="chapter-count">소단원 2개</span>
+            <span class="chapter-chevron">▼</span>
+          </div>
+          <div class="lesson-grid">
+            <a href="lesson.html?lesson=2-1-01&tab=concept" class="lesson-grid-item">
+              <span class="lesson-num-badge">01</span>
+              <div class="lesson-info">
+                <div class="lesson-name">신경자극전도</div>
+                <span class="lesson-activity-badge act-video">📹 영상</span>
+              </div>
+            </a>
+            <a href="lesson.html?lesson=2-1-02&tab=concept" class="lesson-grid-item">
+              <span class="lesson-num-badge">02</span>
+              <div class="lesson-info">
+                <div class="lesson-name">시냅스전달</div>
+                <span class="lesson-activity-badge act-video">📹 영상</span>
+              </div>
+            </a>
           </div>
         </div>
-        <div class="lesson-grid" id="lessons-2">
-          <a href="lesson.html?lesson=2-1&tab=concept" class="lesson-grid-item">
-            <span class="lesson-num-badge">1</span>
-            <div class="lesson-info">
-              <div class="lesson-name">세포의 구조</div>
-              <div class="lesson-type-badges">
-                <span class="type-tag concept">개념</span>
-                <span class="type-tag video">영상</span>
+
+        <!-- 중단원 2-2 -->
+        <div class="chapter-group">
+          <div class="chapter-group-header" onclick="toggleChapter(this)">
+            <span class="chapter-num-badge">중단원 2)</span>
+            <span class="chapter-title-text">신경계와 항상성</span>
+            <span class="chapter-count">소단원 2개</span>
+            <span class="chapter-chevron">▼</span>
+          </div>
+          <div class="lesson-grid">
+            <a href="lesson.html?lesson=2-2-01&tab=concept" class="lesson-grid-item">
+              <span class="lesson-num-badge">01</span>
+              <div class="lesson-info">
+                <div class="lesson-name">사람의 신경계</div>
+                <span class="lesson-activity-badge act-video">📹 영상</span>
               </div>
-            </div>
-          </a>
-          <a href="lesson.html?lesson=2-2&tab=concept" class="lesson-grid-item">
-            <span class="lesson-num-badge">2</span>
-            <div class="lesson-info">
-              <div class="lesson-name">세포막을 통한 물질 이동</div>
-              <div class="lesson-type-badges">
-                <span class="type-tag concept">개념</span>
-                <span class="type-tag sim">실험</span>
+            </a>
+            <a href="lesson.html?lesson=2-2-02&tab=concept" class="lesson-grid-item">
+              <span class="lesson-num-badge">02</span>
+              <div class="lesson-info">
+                <div class="lesson-name">항상성 유지</div>
+                <span class="lesson-activity-badge act-sim">🧪 실험</span>
               </div>
-            </div>
-          </a>
+            </a>
+          </div>
+        </div>
+
+        <!-- 중단원 2-3 -->
+        <div class="chapter-group">
+          <div class="chapter-group-header" onclick="toggleChapter(this)">
+            <span class="chapter-num-badge">중단원 3)</span>
+            <span class="chapter-title-text">우리 몸의 방어 작용</span>
+            <span class="chapter-count">소단원 3개</span>
+            <span class="chapter-chevron">▼</span>
+          </div>
+          <div class="lesson-grid">
+            <a href="lesson.html?lesson=2-3-01&tab=concept" class="lesson-grid-item">
+              <span class="lesson-num-badge">01</span>
+              <div class="lesson-info">
+                <div class="lesson-name">병원체와 방어 작용</div>
+                <span class="lesson-activity-badge act-video">📹 영상</span>
+              </div>
+            </a>
+            <a href="lesson.html?lesson=2-3-02&tab=concept" class="lesson-grid-item">
+              <span class="lesson-num-badge">02</span>
+              <div class="lesson-info">
+                <div class="lesson-name">항원항체반응과 혈액형</div>
+                <span class="lesson-activity-badge act-sim">🧪 실험</span>
+              </div>
+            </a>
+            <a href="lesson.html?lesson=2-3-03&tab=concept" class="lesson-grid-item">
+              <span class="lesson-num-badge">03</span>
+              <div class="lesson-info">
+                <div class="lesson-name">백신의 작용 원리와 종류</div>
+                <span class="lesson-activity-badge act-inquiry">🔍 탐구</span>
+              </div>
+            </a>
+          </div>
         </div>
       </div>
 
-      <!-- ── 단원 III ── -->
-      <div class="unit-row" id="unit-row-3">
-        <div class="unit-row-header" onclick="toggleUnit('unit-row-3')">
-          <div class="unit-row-icon orange">⚗️</div>
-          <div class="unit-row-info">
-            <div class="unit-row-num">단원 Ⅲ</div>
-            <div class="unit-row-title">물질대사</div>
-            <div class="unit-row-desc">효소의 작용 원리, 세포 호흡과 광합성의 과정을 탐구한다.</div>
+      <div class="section-spacer"></div>
+
+      <!-- ══════════════════════════════════════
+           대단원 3. 생명의 연속성과 다양성
+           ══════════════════════════════════════ -->
+      <div id="unit-3" class="major-unit-section fade-in-up delay-2">
+        <div class="major-unit-header teal">
+          <div class="major-unit-icon">🧬</div>
+          <div class="major-unit-info">
+            <div class="major-unit-num">대단원 3</div>
+            <div class="major-unit-title">생명의 연속성과 다양성</div>
+            <div class="major-unit-desc">염색체와 생식세포 형성 / 생물의 진화와 다양성</div>
           </div>
-          <div class="unit-row-meta">
-            <span class="unit-row-count">소단원 3개</span>
-            <span class="unit-toggle-icon">▼</span>
+          <span class="major-unit-count">중단원 2 · 소단원 6</span>
+        </div>
+
+        <!-- 중단원 3-1 -->
+        <div class="chapter-group">
+          <div class="chapter-group-header" onclick="toggleChapter(this)">
+            <span class="chapter-num-badge">중단원 1)</span>
+            <span class="chapter-title-text">염색체와 생식세포 형성</span>
+            <span class="chapter-count">소단원 2개</span>
+            <span class="chapter-chevron">▼</span>
+          </div>
+          <div class="lesson-grid">
+            <a href="lesson.html?lesson=3-1-01&tab=concept" class="lesson-grid-item">
+              <span class="lesson-num-badge">01</span>
+              <div class="lesson-info">
+                <div class="lesson-name">염색체, DNA, 유전자</div>
+                <span class="lesson-activity-badge act-video">📹 영상</span>
+              </div>
+            </a>
+            <a href="lesson.html?lesson=3-1-02&tab=concept" class="lesson-grid-item">
+              <span class="lesson-num-badge">02</span>
+              <div class="lesson-info">
+                <div class="lesson-name">생식세포 형성의 중요성</div>
+                <span class="lesson-activity-badge act-sim">🧪 실험</span>
+              </div>
+            </a>
           </div>
         </div>
-        <div class="lesson-grid" id="lessons-3">
-          <a href="lesson.html?lesson=3-1&tab=concept" class="lesson-grid-item">
-            <span class="lesson-num-badge">1</span>
-            <div class="lesson-info">
-              <div class="lesson-name">효소</div>
-              <div class="lesson-type-badges">
-                <span class="type-tag concept">개념</span>
-                <span class="type-tag sim">실험</span>
+
+        <!-- 중단원 3-2 -->
+        <div class="chapter-group">
+          <div class="chapter-group-header" onclick="toggleChapter(this)">
+            <span class="chapter-num-badge">중단원 2)</span>
+            <span class="chapter-title-text">생물의 진화와 다양성</span>
+            <span class="chapter-count">소단원 4개</span>
+            <span class="chapter-chevron">▼</span>
+          </div>
+          <div class="lesson-grid">
+            <a href="lesson.html?lesson=3-2-01&tab=concept" class="lesson-grid-item">
+              <span class="lesson-num-badge">01</span>
+              <div class="lesson-info">
+                <div class="lesson-name">생물의 진화</div>
+                <span class="lesson-activity-badge act-video">📹 영상</span>
               </div>
-            </div>
-          </a>
-          <a href="lesson.html?lesson=3-2&tab=concept" class="lesson-grid-item">
-            <span class="lesson-num-badge">2</span>
-            <div class="lesson-info">
-              <div class="lesson-name">세포 호흡</div>
-              <div class="lesson-type-badges">
-                <span class="type-tag concept">개념</span>
-                <span class="type-tag video">영상</span>
+            </a>
+            <a href="lesson.html?lesson=3-2-02&tab=concept" class="lesson-grid-item">
+              <span class="lesson-num-badge">02</span>
+              <div class="lesson-info">
+                <div class="lesson-name">식물의 분류체계</div>
+                <span class="lesson-activity-badge act-inquiry">🔍 탐구</span>
               </div>
-            </div>
-          </a>
-          <a href="lesson.html?lesson=3-3&tab=concept" class="lesson-grid-item">
-            <span class="lesson-num-badge">3</span>
-            <div class="lesson-info">
-              <div class="lesson-name">광합성</div>
-              <div class="lesson-type-badges">
-                <span class="type-tag concept">개념</span>
-                <span class="type-tag video">영상</span>
+            </a>
+            <a href="lesson.html?lesson=3-2-03&tab=concept" class="lesson-grid-item">
+              <span class="lesson-num-badge">03</span>
+              <div class="lesson-info">
+                <div class="lesson-name">식물의 분류</div>
+                <span class="lesson-activity-badge act-inquiry">🔍 탐구</span>
               </div>
-            </div>
-          </a>
+            </a>
+            <a href="lesson.html?lesson=3-2-04&tab=concept" class="lesson-grid-item">
+              <span class="lesson-num-badge">04</span>
+              <div class="lesson-info">
+                <div class="lesson-name">동물의 분류</div>
+                <span class="lesson-activity-badge act-inquiry">🔍 탐구</span>
+              </div>
+            </a>
+          </div>
         </div>
       </div>
 
-      <!-- ── 단원 IV ── -->
-      <div class="unit-row" id="unit-row-4">
-        <div class="unit-row-header" onclick="toggleUnit('unit-row-4')">
-          <div class="unit-row-icon purple">🧬</div>
-          <div class="unit-row-info">
-            <div class="unit-row-num">단원 Ⅳ</div>
-            <div class="unit-row-title">유전자와 생명 공학</div>
-            <div class="unit-row-desc">DNA 구조, 유전 정보 발현, 생명 공학 기술을 이해한다.</div>
-          </div>
-          <div class="unit-row-meta">
-            <span class="unit-row-count">소단원 3개</span>
-            <span class="unit-toggle-icon">▼</span>
-          </div>
-        </div>
-        <div class="lesson-grid" id="lessons-4">
-          <a href="lesson.html?lesson=4-1&tab=concept" class="lesson-grid-item">
-            <span class="lesson-num-badge">1</span>
-            <div class="lesson-info">
-              <div class="lesson-name">DNA와 유전자</div>
-              <div class="lesson-type-badges">
-                <span class="type-tag concept">개념</span>
-                <span class="type-tag video">영상</span>
-              </div>
-            </div>
-          </a>
-          <a href="lesson.html?lesson=4-2&tab=concept" class="lesson-grid-item">
-            <span class="lesson-num-badge">2</span>
-            <div class="lesson-info">
-              <div class="lesson-name">유전 정보의 발현</div>
-              <div class="lesson-type-badges">
-                <span class="type-tag concept">개념</span>
-                <span class="type-tag video">영상</span>
-              </div>
-            </div>
-          </a>
-          <a href="lesson.html?lesson=4-3&tab=concept" class="lesson-grid-item">
-            <span class="lesson-num-badge">3</span>
-            <div class="lesson-info">
-              <div class="lesson-name">생명 공학 기술</div>
-              <div class="lesson-type-badges">
-                <span class="type-tag concept">개념</span>
-              </div>
-            </div>
-          </a>
-        </div>
-      </div>
+      <div class="section-spacer"></div>
 
-      <!-- ── 단원 V ── -->
-      <div class="unit-row" id="unit-row-5">
-        <div class="unit-row-header" onclick="toggleUnit('unit-row-5')">
-          <div class="unit-row-icon teal">🌿</div>
-          <div class="unit-row-info">
-            <div class="unit-row-num">단원 Ⅴ</div>
-            <div class="unit-row-title">생물의 진화와 다양성</div>
-            <div class="unit-row-desc">생물의 분류 체계와 진화의 원리, 자연선택을 탐구한다.</div>
-          </div>
-          <div class="unit-row-meta">
-            <span class="unit-row-count">소단원 2개</span>
-            <span class="unit-toggle-icon">▼</span>
-          </div>
-        </div>
-        <div class="lesson-grid" id="lessons-5">
-          <a href="lesson.html?lesson=5-1&tab=concept" class="lesson-grid-item">
-            <span class="lesson-num-badge">1</span>
-            <div class="lesson-info">
-              <div class="lesson-name">생물의 분류</div>
-              <div class="lesson-type-badges">
-                <span class="type-tag concept">개념</span>
-              </div>
-            </div>
-          </a>
-          <a href="lesson.html?lesson=5-2&tab=concept" class="lesson-grid-item">
-            <span class="lesson-num-badge">2</span>
-            <div class="lesson-info">
-              <div class="lesson-name">생물의 진화</div>
-              <div class="lesson-type-badges">
-                <span class="type-tag concept">개념</span>
-                <span class="type-tag video">영상</span>
-              </div>
-            </div>
-          </a>
-        </div>
-      </div>
-
-      <!-- ── 단원 VI ── -->
-      <div class="unit-row" id="unit-row-6">
-        <div class="unit-row-header" onclick="toggleUnit('unit-row-6')">
-          <div class="unit-row-icon blue">🫀</div>
-          <div class="unit-row-info">
-            <div class="unit-row-num">단원 Ⅵ</div>
-            <div class="unit-row-title">인체의 구조와 기능</div>
-            <div class="unit-row-desc">신경계, 호르몬, 면역 반응의 원리와 항상성을 이해한다.</div>
-          </div>
-          <div class="unit-row-meta">
-            <span class="unit-row-count">소단원 3개</span>
-            <span class="unit-toggle-icon">▼</span>
-          </div>
-        </div>
-        <div class="lesson-grid" id="lessons-6">
-          <a href="lesson.html?lesson=6-1&tab=concept" class="lesson-grid-item">
-            <span class="lesson-num-badge">1</span>
-            <div class="lesson-info">
-              <div class="lesson-name">신경계</div>
-              <div class="lesson-type-badges">
-                <span class="type-tag concept">개념</span>
-                <span class="type-tag video">영상</span>
-              </div>
-            </div>
-          </a>
-          <a href="lesson.html?lesson=6-2&tab=concept" class="lesson-grid-item">
-            <span class="lesson-num-badge">2</span>
-            <div class="lesson-info">
-              <div class="lesson-name">호르몬과 항상성</div>
-              <div class="lesson-type-badges">
-                <span class="type-tag concept">개념</span>
-                <span class="type-tag video">영상</span>
-              </div>
-            </div>
-          </a>
-          <a href="lesson.html?lesson=6-3&tab=concept" class="lesson-grid-item">
-            <span class="lesson-num-badge">3</span>
-            <div class="lesson-info">
-              <div class="lesson-name">방어 작용 (면역)</div>
-              <div class="lesson-type-badges">
-                <span class="type-tag concept">개념</span>
-                <span class="type-tag video">영상</span>
-              </div>
-            </div>
-          </a>
-        </div>
-      </div>
-
-      <!-- ── 단원 VII ── -->
-      <div class="unit-row" id="unit-row-7">
-        <div class="unit-row-header" onclick="toggleUnit('unit-row-7')">
-          <div class="unit-row-icon green">🌍</div>
-          <div class="unit-row-info">
-            <div class="unit-row-num">단원 Ⅶ</div>
-            <div class="unit-row-title">생태계와 상호 작용</div>
-            <div class="unit-row-desc">생태계 구성, 에너지 흐름, 물질 순환, 생물 다양성 보전을 탐구한다.</div>
-          </div>
-          <div class="unit-row-meta">
-            <span class="unit-row-count">소단원 3개</span>
-            <span class="unit-toggle-icon">▼</span>
-          </div>
-        </div>
-        <div class="lesson-grid" id="lessons-7">
-          <a href="lesson.html?lesson=7-1&tab=concept" class="lesson-grid-item">
-            <span class="lesson-num-badge">1</span>
-            <div class="lesson-info">
-              <div class="lesson-name">생태계의 구성과 기능</div>
-              <div class="lesson-type-badges">
-                <span class="type-tag concept">개념</span>
-              </div>
-            </div>
-          </a>
-          <a href="lesson.html?lesson=7-2&tab=concept" class="lesson-grid-item">
-            <span class="lesson-num-badge">2</span>
-            <div class="lesson-info">
-              <div class="lesson-name">에너지 흐름과 물질 순환</div>
-              <div class="lesson-type-badges">
-                <span class="type-tag concept">개념</span>
-                <span class="type-tag video">영상</span>
-              </div>
-            </div>
-          </a>
-          <a href="lesson.html?lesson=7-3&tab=concept" class="lesson-grid-item">
-            <span class="lesson-num-badge">3</span>
-            <div class="lesson-info">
-              <div class="lesson-name">생물 다양성 보전</div>
-              <div class="lesson-type-badges">
-                <span class="type-tag concept">개념</span>
-              </div>
-            </div>
-          </a>
-        </div>
-      </div>
-
-    </div>
-    <!-- // unit-full-list -->
-
+    </div><!-- /.units-list-wrap -->
   </main>
 </div>
 
-<!-- 모바일 오버레이 -->
 <div id="sidebar-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:940;"></div>
 
 <script src="../assets/js/main.js"></script>
 <script>
-  function toggleUnit(rowId) {
-    const row = document.getElementById(rowId);
-    const num = rowId.split('-')[2];
-    const grid = document.getElementById('lessons-' + num);
-    const isOpen = row.classList.contains('open');
-
-    // 모두 닫기
-    document.querySelectorAll('.unit-row').forEach(r => r.classList.remove('open'));
-    document.querySelectorAll('.lesson-grid').forEach(g => g.classList.remove('open'));
-
-    if (!isOpen) {
-      row.classList.add('open');
-      grid.classList.add('open');
-    }
+  function toggleChapter(el) {
+    const grid = el.nextElementSibling;
+    const isOpen = el.classList.contains('open');
+    el.classList.toggle('open', !isOpen);
+    grid.classList.toggle('open', !isOpen);
   }
+
+  // URL 해시로 스크롤
+  window.addEventListener('DOMContentLoaded', () => {
+    if (window.location.hash) {
+      const target = document.querySelector(window.location.hash);
+      if (target) setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }), 300);
+    }
+  });
 </script>
 </body>
 </html>

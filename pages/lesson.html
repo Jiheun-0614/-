@@ -214,16 +214,18 @@
       <span class="sep">›</span>
       <a href="units.html">단원 목록</a>
       <span class="sep">›</span>
-      <span id="bc-unit">단원 I</span>
+      <span id="bc-major">대단원 1</span>
       <span class="sep">›</span>
-      <span id="bc-lesson">생명 현상의 특성</span>
+      <span id="bc-chapter">생명과학의 이해</span>
+      <span class="sep">›</span>
+      <span id="bc-lesson">01. 생물의 특성</span>
     </nav>
 
     <!-- 페이지 헤더 -->
     <div class="lesson-page-header">
-      <span class="unit-tag" id="page-unit-tag">단원 I · 생명 과학의 이해</span>
-      <h1 id="page-lesson-title">생명 현상의 특성</h1>
-      <p id="page-lesson-desc" class="text-gray">생물이 공통적으로 지니는 생명 현상의 특성을 이해한다.</p>
+      <span class="unit-tag" id="page-unit-tag">대단원 1 · 중단원 1) 생명과학의 이해</span>
+      <h1 id="page-lesson-title">01. 생물의 특성</h1>
+      <p id="page-lesson-desc" class="text-gray">생물이 공통적으로 지니는 생명 현상의 특성을 이해하고, 생물과 무생물을 구별할 수 있다.</p>
     </div>
 
     <!-- 탭 버튼 -->
@@ -848,8 +850,8 @@
     // 이전/다음 단원 링크 설정 (예시)
     const lessonId = getQueryParam('lesson') || '1-1';
     document.getElementById('prev-title').textContent = '–';
-    document.getElementById('next-title').textContent = '생명 과학의 탐구 방법';
-    document.getElementById('next-lesson').href = `lesson.html?lesson=1-2&tab=concept`;
+    document.getElementById('next-title').textContent = '02. 생명과학의 특성';
+    document.getElementById('next-lesson').href = `lesson.html?lesson=1-1-02&tab=concept`;
   });
 </script>
 </body>
