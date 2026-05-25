@@ -153,9 +153,10 @@
                     👉 아래 네모 칸을 터치하여 현미경으로 촬영한 용액별 세포 사진을 업로드하고, 관찰 결과를 적어주세요.
                 </p>
 
-                <input type="file" id="file-iso" accept="image/*" capture="environment" style="display: none;" onchange="previewImage(event, 'preview-iso', 'base64-iso')">
-                <input type="file" id="file-hyper" accept="image/*" capture="environment" style="display: none;" onchange="previewImage(event, 'preview-hyper', 'base64-hyper')">
-                <input type="file" id="file-hypo" accept="image/*" capture="environment" style="display: none;" onchange="previewImage(event, 'preview-hypo', 'base64-hypo')">
+                <!-- capture="environment" 속성을 제거하여 카메라/갤러리 선택창이 뜨도록 수정 -->
+                <input type="file" id="file-iso" accept="image/*" style="display: none;" onchange="previewImage(event, 'preview-iso', 'base64-iso')">
+                <input type="file" id="file-hyper" accept="image/*" style="display: none;" onchange="previewImage(event, 'preview-hyper', 'base64-hyper')">
+                <input type="file" id="file-hypo" accept="image/*" style="display: none;" onchange="previewImage(event, 'preview-hypo', 'base64-hypo')">
 
                 <div class="result-card">
                     <h3 style="color:#2e7d32;">1. 등장액 (0.9% NaCl)</h3>
