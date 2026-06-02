@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>용해도 시뮬레이션</title>
+  
+  <!-- Tailwind CSS 불러오기 -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- React, ReactDOM 불러오기 -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  
+  <!-- 브라우저에서 JSX를 변환해주는 Babel 불러오기 -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    /* 스크롤바 스타일 */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    
+    /* 애니메이션 키프레임 */
+    @keyframes swirl0 {
+      0% { transform: translate(0px, 0px); }
+      33% { transform: translate(4px, -3px); }
+      66% { transform: translate(-2px, 5px); }
+      100% { transform: translate(0px, 0px); }
+    }
+    @keyframes swirl1 {
+      0% { transform: translate(0px, 0px); }
+      33% { transform: translate(-5px, -2px); }
+      66% { transform: translate(3px, 4px); }
+      100% { transform: translate(0px, 0px); }
+    }
+    @keyframes swirl2 {
+      0% { transform: translate(0px, 0px); }
+      33% { transform: translate(2px, 6px); }
+      66% { transform: translate(-4px, -4px); }
+      100% { transform: translate(0px, 0px); }
+    }
+    @keyframes pour {
+      0% { transform: translateY(0); opacity: 0; }
+      10% { opacity: 1; }
+      80% { opacity: 1; }
+      100% { transform: translateY(65px); opacity: 0; }
+    }
+  </style>
+</head>
+<body class="bg-slate-50">
+  <!-- React 앱이 렌더링 될 공간 -->
+  <div id="root"></div>
+
+  <!-- React 컴포넌트 코드 -->
+  <script type="text/babel">
+    const { useState, useMemo, useRef, useEffect } = React;
+
+    // 물질별 용해도 데이터 (물 100g 기준)
+    const SOLUBILITY_DATA = {
+      nano3: {
+        id: 'nano3',
+        name: '질산 나트륨',
+        formula: 'NaNO₃',
+        color: '#f43f5e',
+        particleColor: '#e11d48',
+        data: { 0: 73, 20: 88, 40: 104, 60: 124, 80: 148, 100: 180 }
+      },
+      kno3: {
+        id: 'kno3',
+        name: '질산 칼륨',
+        formula: 'KNO₃',
+        color: '#a855f7',
+        particleColor: '#9333ea',
+        data: { 0: 13, 20: 32, 40: 64, 60: 110, 80: 169, 100: 246 }
+      },
+      cuso4: {
+        id: 'cuso4',
+        name: '황산 구리(II)',
+        formula: 'CuSO₄',
+        color: '#3b82f6',
+        particleColor: '#2563eb',
+        data: { 0: 14, 20: 21, 40: 29, 60: 40, 80: 55, 100: 75 }
+      },
+      nacl: {
+        id: 'nacl',
+        name: '염화 나트륨',
+        formula: 'NaCl',
+        color: '#eab308',
+        particleColor: '#ca8a04',
+        data: { 0: 35.7, 20: 35.9, 40: 36.6, 60: 37.3, 80: 38.4, 100: 39.8 }
+      },
+      h3bo3: {
+        id: 'h3bo3',
+        name: '붕산',
+        formula: 'H₃BO₃',
+        color: '#22c55e',
+        particleColor: '#16a34a',
+        data: { 0: 2.5, 20: 4.7, 40: 8.0, 60: 14.8, 80: 23.8, 100: 40.2 }
+      }
+    };
+
+    const TEMPERATURES = [0, 20, 40, 60, 80, 100];
+
+    function App() {
+      const [selectedSubstance, setSelectedSubstance] = useState('kno3');
+      const [temperature, setTemperature] = useState(20);
+      const [soluteAmount, setSoluteAmount] = useState(0);
+      const [isPouring, setIsPouring] = useState(false);
+      const pouringTimeout = useRef(null);
+
+      const substanceInfo = SOLUBILITY_DATA[selectedSubstance];
+      const maxSolubility = substanceInfo.data[temperature];
+      
+      // 녹은 양과 가라앉은 양 계산
+      const dissolvedAmount = Math.min(soluteAmount, maxSolubility);
+      const precipitateAmount = Math.max(0, soluteAmount - maxSolubility);
+
+      // 시각화용 입자 (렌더링 시 깜빡임 방지를 위해 미리 계산)
+      const particles = useMemo(() => {
+        return Array.from({ length: 300 }, (_, i) => ({
+          id: i,
+          x: 20 + Math.random() * 60,
+          y: 35 + Math.random() * 55,
+          size: 0.8 + Math.random() * 1.5,
+          duration: 3 + Math.random() * 5,
+          delay: -(Math.random() * 8),
+          animType: Math.floor(Math.random() * 3)
+        }));
+      }, []);
+
+      // 수용액 색상 투명도 계산
+      const waterOpacity = selectedSubstance === 'cuso4' 
+        ? Math.min(0.8, (dissolvedAmount / 100) * 0.8) 
+        : 0;
+
+      // 앙금 높이 계산 (최대 약 300g 기준)
+      const maxPrecipitateHeight = 60;
+      const precipitateHeight = Math.min(maxPrecipitateHeight, (precipitateAmount / 250) * maxPrecipitateHeight);
+
+      // 용질 양 변경 핸들러
+      const handleAmountChange = (e) => {
+        let val = Number(e.target.value);
+        if (val < 0) val = 0;
+        if (val > 300) val = 300;
+        
+        // 용질의 양이 증가할 때 붓는 모션 활성화
+        if (val > soluteAmount) {
+          setIsPouring(true);
+          if (pouringTimeout.current) clearTimeout(pouringTimeout.current);
+          pouringTimeout.current = setTimeout(() => {
+            setIsPouring(false);
+          }, 300);
+        }
+        
+        setSoluteAmount(val);
+      };
+
+      // 컴포넌트 언마운트 시 타이머 정리
+      useEffect(() => {
+        return () => {
+          if (pouringTimeout.current) clearTimeout(pouringTimeout.current);
+        };
+      }, []);
+
+      return (
+        <div className="min-h-screen bg-slate-50 font-sans p-4 md:p-8 text-slate-800">
+          <div className="max-w-5xl mx-auto space-y-6">
+            
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+              
+              {/* 왼쪽 제어 패널 */}
+              <div className="lg:col-span-5 space-y-6">
+                
+                {/* 1. 물질 선택 */}
+                <div className="bg-white rounded-2xl shadow-sm p-6 border border-slate-100">
+                  <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                    <span className="bg-blue-100 text-blue-600 w-6 h-6 rounded-full flex items-center justify-center text-sm">1</span> 
+                    물질 선택
+                  </h2>
+                  <div className="flex flex-wrap gap-2">
+                    {Object.values(SOLUBILITY_DATA).map((sub) => (
+                      <button
+                        key={sub.id}
+                        onClick={() => setSelectedSubstance(sub.id)}
+                        className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 border ${
+                          selectedSubstance === sub.id
+                            ? 'bg-blue-50 border-blue-500 text-blue-700 shadow-sm'
+                            : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
+                        }`}
+                      >
+                        {sub.name} ({sub.formula})
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 2. 온도 선택 */}
+                <div className="bg-white rounded-2xl shadow-sm p-6 border border-slate-100">
+                  <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                    <span className="bg-blue-100 text-blue-600 w-6 h-6 rounded-full flex items-center justify-center text-sm">2</span> 
+                    온도 설정 (℃)
+                  </h2>
+                  <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+                    {TEMPERATURES.map((t) => (
+                      <button
+                        key={t}
+                        onClick={() => setTemperature(t)}
+                        className={`py-3 rounded-lg text-base font-bold transition-all duration-200 border ${
+                          temperature === t
+                            ? 'bg-orange-500 border-orange-600 text-white shadow-md transform scale-105'
+                            : 'bg-white border-slate-200 text-slate-700 hover:bg-orange-50'
+                        }`}
+                      >
+                        {t}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 3. 용질의 양 조절 */}
+                <div className="bg-white rounded-2xl shadow-sm p-6 border border-slate-100">
+                  <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-lg font-semibold flex items-center gap-2">
+                      <span className="bg-blue-100 text-blue-600 w-6 h-6 rounded-full flex items-center justify-center text-sm">3</span> 
+                      넣은 용질의 양
+                    </h2>
+                    <div className="flex items-center gap-2">
+                      <input 
+                        type="number" 
+                        min="0" 
+                        max="300" 
+                        value={soluteAmount}
+                        onChange={handleAmountChange}
+                        className="w-20 px-3 py-1 border border-slate-300 rounded-lg text-right font-semibold focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                      />
+                      <span className="font-medium text-slate-600">g</span>
+                    </div>
+                  </div>
+                  <input 
+                    type="range" 
+                    min="0" 
+                    max="300" 
+                    value={soluteAmount}
+                    onChange={handleAmountChange}
+                    className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+                  />
+                  <div className="flex justify-between text-xs text-slate-400 mt-2">
+                    <span>0g</span>
+                    <span>150g</span>
+                    <span>300g</span>
+                  </div>
+                </div>
+
+              </div>
+
+              {/* 오른쪽 시각화 패널 */}
+              <div className="lg:col-span-7 flex flex-col gap-6">
+                
+                {/* 비커 시각화 영역 */}
+                <div className="bg-white rounded-2xl shadow-sm p-6 border border-slate-100 flex-1 flex flex-col items-center justify-center relative overflow-hidden">
+                  <div className="absolute top-4 left-4 flex gap-2 z-10">
+                    <div className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-semibold border border-blue-100 shadow-sm">
+                      물 100g
+                    </div>
+                    <div className="px-3 py-1 bg-orange-50 text-orange-700 rounded-full text-sm font-semibold border border-orange-100 shadow-sm">
+                      {temperature} ℃
+                    </div>
+                  </div>
+
+                  {/* Beaker SVG */}
+                  <div className="relative mt-8" style={{ width: '220px', height: '280px' }}>
+                    <svg viewBox="0 0 200 250" className="w-full h-full drop-shadow-xl overflow-visible">
+                      {/* 비커 뒷면 유리 */}
+                      <path d="M 30,20 L 30,220 C 30,235 40,240 100,240 C 160,240 170,235 170,220 L 170,20" fill="none" stroke="#e2e8f0" stroke-width="4" />
+                      
+                      {/* 숟가락 및 붓는 애니메이션 */}
+                      <g className="pouring-effect">
+                        <text
+                          x="80"
+                          y="20"
+                          font-size="28"
+                          style={{
+                            transition: 'all 0.2s',
+                            opacity: isPouring ? 1 : 0,
+                            transform: isPouring ? 'rotate(-25deg)' : 'rotate(0deg)',
+                            transformOrigin: '90px 20px'
+                          }}
+                        >
+                          🥄
+                        </text>
+                        {isPouring && Array.from({ length: 20 }).map((_, i) => (
+                          <circle
+                            key={`pour-${i}`}
+                            cx={90 + Math.random() * 20}
+                            cy={20}
+                            r={1 + Math.random() * 1.5}
+                            fill={substanceInfo.particleColor}
+                            style={{
+                              animation: `pour ${0.3 + Math.random() * 0.3}s linear infinite`,
+                              animationDelay: `${-(Math.random() * 0.5)}s`
+                            }}
+                          />
+                        ))}
+                      </g>
+
+                      {/* 물 (용매) */}
+                      <path d="M 32,80 L 32,220 C 32,233 42,238 100,238 C 158,238 168,233 168,220 L 168,80 Z" fill="#bae6fd" opacity="0.4" />
+                      
+                      {/* 수용액 색상 효과 (황산구리용) */}
+                      {waterOpacity > 0 && (
+                        <path d="M 32,80 L 32,220 C 32,233 42,238 100,238 C 158,238 168,233 168,220 L 168,80 Z" fill={substanceInfo.color} opacity={waterOpacity} />
+                      )}
+
+                      {/* 녹은 입자들 (자연스럽게 맴도는 애니메이션 적용) */}
+                      <g className="dissolved-particles">
+                        {particles.slice(0, Math.floor(dissolvedAmount)).map(p => (
+                          <circle 
+                            key={p.id} 
+                            cx={`${p.x}%`} 
+                            cy={`${p.y}%`} 
+                            r={p.size} 
+                            fill={substanceInfo.particleColor} 
+                            opacity="0.8" 
+                            style={{
+                              animation: `swirl${p.animType} ${p.duration}s ease-in-out ${p.delay}s infinite`
+                            }}
+                          />
+                        ))}
+                      </g>
+
+                      {/* 가라앉은 앙금 */}
+                      {precipitateAmount > 0 && (
+                        <path 
+                          d={`M 40,235 Q 100,${235 - precipitateHeight * 2} 160,235 Z`} 
+                          fill={substanceInfo.color} 
+                          opacity="0.9"
+                          stroke={substanceInfo.color}
+                          stroke-width="2"
+                        />
+                      )}
+
+                      {/* 비커 앞면 유리 & 눈금 */}
+                      <path d="M 30,20 L 30,220 C 30,235 40,240 100,240 C 160,240 170,235 170,220 L 170,20" fill="none" stroke="#cbd5e1" stroke-width="6" stroke-linecap="round" />
+                      <path d="M 25,20 L 175,20" fill="none" stroke="#cbd5e1" stroke-width="6" stroke-linecap="round" />
+                      {/* 눈금 */}
+                      <line x1="30" y1="80" x2="45" y2="80" stroke="#94a3b8" stroke-width="2" />
+                      <line x1="30" y1="115" x2="40" y2="115" stroke="#94a3b8" stroke-width="2" />
+                      <line x1="30" y1="150" x2="45" y2="150" stroke="#94a3b8" stroke-width="2" />
+                      <line x1="30" y1="185" x2="40" y2="185" stroke="#94a3b8" stroke-width="2" />
+                    </svg>
+
+                    {/* 앙금 라벨 애니메이션 */}
+                    {precipitateAmount > 0 && (
+                      <div className="absolute bottom-2 w-full text-center animate-bounce">
+                        <span className="bg-slate-800 text-white text-xs px-2 py-1 rounded-md shadow-md opacity-90">
+                          가라앉음 ({precipitateAmount.toFixed(1)}g)
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* 결과 데이터 패널 */}
+                <div className="bg-white rounded-2xl shadow-sm p-6 border border-slate-100 grid grid-cols-2 gap-4">
+                  <div className="bg-green-50 rounded-xl p-4 border border-green-100 flex flex-col justify-center">
+                      <span className="text-green-700 text-sm font-medium mb-1">녹은 양</span>
+                      <span className="text-2xl font-bold text-green-600">{dissolvedAmount.toFixed(1)} <span className="text-lg font-normal">g</span></span>
+                  </div>
+
+                  <div className={`rounded-xl p-4 border flex flex-col justify-center transition-colors duration-300 ${precipitateAmount > 0 ? 'bg-red-50 border-red-100' : 'bg-slate-50 border-slate-200'}`}>
+                      <span className={`${precipitateAmount > 0 ? 'text-red-700' : 'text-slate-500'} text-sm font-medium mb-1`}>가라앉은 양 (앙금)</span>
+                      <span className={`text-2xl font-bold ${precipitateAmount > 0 ? 'text-red-600' : 'text-slate-400'}`}>
+                        {precipitateAmount.toFixed(1)} <span className="text-lg font-normal">g</span>
+                      </span>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
