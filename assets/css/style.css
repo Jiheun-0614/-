@@ -1547,9 +1547,70 @@ input[type="range"]::-webkit-slider-thumb:hover {
   margin-top: 1px;
 }
 
-/* ===================================================
-   반응형 (태블릿 / 모바일)
-   =================================================== */
+/* 사이드바 대단원 (3단 계층) */
+.sidebar-major-item {
+  border-bottom: 1px solid var(--gray-100);
+}
+
+.sidebar-major-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 20px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gray-800);
+  background: var(--gray-50);
+  cursor: pointer;
+  transition: var(--transition);
+  border-left: 3px solid transparent;
+}
+
+.sidebar-major-title:hover {
+  background: var(--primary-50);
+  color: var(--primary-700);
+  border-left-color: var(--primary-400);
+}
+
+.sidebar-major-title.open {
+  background: var(--primary-50);
+  color: var(--primary-700);
+  border-left-color: var(--primary-500);
+}
+
+.sidebar-major-title .chevron {
+  margin-left: auto;
+  font-size: 10px;
+  color: var(--gray-400);
+  transition: transform 0.2s ease;
+}
+
+.sidebar-major-title.open .chevron {
+  transform: rotate(180deg);
+}
+
+.sidebar-major-body {
+  display: none;
+}
+
+.sidebar-major-body.open {
+  display: block;
+}
+
+/* 중단원 타이틀 (사이드바 안) */
+.sidebar-major-body .unit-title {
+  padding-left: 28px;
+  background: #fff;
+  font-size: 12.5px;
+}
+
+/* 소단원 아이템 (사이드바 안) */
+.sidebar-major-body .lesson-item {
+  padding-left: 48px;
+  font-size: 12.5px;
+}
+
+/* 반응형 */
 @media (max-width: 1024px) {
   :root {
     --sidebar-width: 240px;
